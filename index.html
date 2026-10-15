@@ -134,7 +134,7 @@ body:not(.admin) .adminOnly{display:none!important}
 <h1 class="logo"><i aria-hidden="true"></i>어디쌤</h1>
 <div aria-live="polite" class="chip" id="chip">--:--</div>
 </header>
-<p class="small" style="padding:12px;border:1px solid #bbb;border-radius:12px">시간표 기반 예상 위치입니다. 실시간 재실 확인이 아니며 휴일·시험·보강·출장은 반영되지 않습니다. 시간은 한국 표준시 기준입니다. 기본 좌표는 개별 책상이 아닌 소속 방 대표 위치입니다.</p><div class="search">
+<p class="small" style="padding:12px;border:1px solid #bbb;border-radius:12px">시간표 기반 예상 위치입니다. 실시간 재실 확인이 아니며 휴일·시험·보강·출장은 반영되지 않습니다. 시간은 한국 표준시 기준입니다. 기본 좌표는 개별 책상이 아닌 소속 방 대표 위치입니다.</p><p class="small" style="padding:12px">수요일 5·6교시는 기존 수업과 충돌하지 않는 활동 칸에 동아리·자율활동 두 경우를 표시합니다. 격주 여부는 자동 판정하지 않습니다. 동아리 장소는 1학기 계획서 참고값이며 2학기 확인이 필요합니다.</p><div class="search">
 <input aria-label="선생님 검색" autocomplete="off" id="q" placeholder="선생님 이름, 과목, 담임 반(예: 2-3)으로 찾기" type="search"/>
 </div>
 <div class="layout">
@@ -397,7 +397,22 @@ TEACHERS.forEach(t => {
 /* =========================================================
    위치 계산
    ========================================================= */
+const CLUBS={"조정래": {"club": "리트머스", "place": "2-9"}, "김혜원": {"club": "이에스디바이옴", "place": "2-8 / 지구과학실 / 생물실"}, "이하늘": {"club": "지피티1", "place": "컴퓨터1실"}, "변강순": {"club": "지피티2", "place": "컴퓨터1실"}, "장소영": {"club": "엔젤인널스2", "place": "스팀실 / 비슬고"}, "류승원": {"club": "넥서스", "place": "1-10 / 과학실"}, "김정희": {"club": "폴리스1", "place": "1-7"}, "김유진": {"club": "폴리스2", "place": "1-7"}, "장성훈": {"club": "카탈리스트", "place": "2-10 / 실험실 / 교내"}, "지문성": {"club": "메지컬", "place": "2-12 / 화학실"}, "이경락": {"club": "서시", "place": "2-7"}, "김지희": {"club": "글로벌", "place": "2-12 (3/25 첫 활동만 명시 · 나머지 장소 공란)"}, "한종수": {"club": "에프비아이1", "place": "R&E실"}, "금영일": {"club": "에프비아이2", "place": "R&E실"}, "이양지": {"club": "이코닉스", "place": "2-2"}, "김성국": {"club": "심봉사1", "place": "대입지도실 / 교내 / 지역 복지관"}, "우정섭": {"club": "턴오버(농구부)", "place": "강당 (층 미지정)"}, "박효정": {"club": "룩앳미", "place": "1-9"}, "박상희": {"club": "이에스에이", "place": "1-1"}, "김경숙": {"club": "버밀리온", "place": "5층 미술실"}, "양정민": {"club": "교육벼리", "place": "1-11"}, "방그래": {"club": "모션", "place": "2-3 / 교내"}, "정종민": {"club": "바이오스피어", "place": "2-1 / 생명과학실"}, "송지윤": {"club": "와이씨씨", "place": "2-4 / 1학년 각 학급 교실 / 교내 게시판 및 복도"}, "이병국": {"club": "화생방", "place": "2-11 / 화학실"}, "오정훈": {"club": "메디코어", "place": "1-3 / 화학실"}, "박소희": {"club": "디데이", "place": "음악실 (1·2 구분 미지정)"}, "곽세진": {"club": "온에어", "place": "방송실 / 자판기 앞 / 강당 / 시청각실 / 도서관 / 1·2학년 교실"}, "조영산": {"club": "에이오티에스", "place": "2-5"}, "이경희": {"club": "바이오홀릭", "place": "1-8"}, "김옥자": {"club": "신문읽기반", "place": "교과융합실2"}, "배상임": {"club": "지역사회 탐구반", "place": "3-3"}, "류규하": {"club": "미디어와 사회반", "place": "3-7"}, "곽경미": {"club": "수학주제탐구반", "place": "3-8"}, "김병우": {"club": "체육 탐구반", "place": "3-5"}, "권수현": {"club": "경제/경영 탐구반", "place": "3-12"}, "정진엽": {"club": "배움의 정석", "place": "3-9"}, "조은진": {"club": "도시문화예술 탐구반", "place": "3-4"}, "한성욱": {"club": "직업 가치 탐구반", "place": "융합교과1"}, "최정숙": {"club": "바이오 메디컬", "place": "3-10"}, "우정연": {"club": "진로 관련 시사탐구반", "place": "3-2"}, "박은주": {"club": "독서토론반", "place": "3-1"}, "이상명": {"club": "인문사회 주제탐구반", "place": "3-6"}};
+function activityPair(t,day,p){
+ if(Number(day)!==3 || ![5,6].includes(Number(p))) return null;
+ const raw=t.tt[day]?.[p];
+ if(raw && !["동아","자율"].includes(raw[0])) return null;
+ if(!CLUBS[t.name] && !raw) return null;
+ const club=CLUBS[t.name];
+ const autonomous=t.tt[3] && Object.values(t.tt[3]).find(e=>e[0]==="자율" && e[1]);
+ const room=autonomous ? autonomous[1] : null;
+ return {club:club ? club.club+" · "+club.place : "담당 동아리·장소 자료 없음",auto:room ? room+" 교실 (기존 자율활동 시간표 기준)" : "담당 장소 미확인 · 등록 자리로 대체하지 않음"};
+}
+function pairText(a){return "동아리일 때: "+a.club+" | 자율활동일 때: "+a.auto;}
+
 function resolve(t, day, p){
+  const pair=activityPair(t,day,p);
+  if(pair) return {subj:"동아리 / 자율활동",cls:null,room:null,text:pairText(pair),guess:false,pair};
   const e = t.tt[day]?.[p]; if (!e) return null;
   const [subj, room] = e;
   if (subj === "─▷"){ const prev = resolve(t, day, p-1); return prev ? {...prev, cont:true} : null; }
@@ -434,10 +449,10 @@ function statusAt(t, day, min){
     if (res){
       const l = locOf(res);
       return {kind:"class", period:cur.n, loc:l, res,
-        title:l.label, sub:`${cur.n}교시 · ${full(res.subj==="─▷"?"":res.subj)}${res.cls?` · ${res.cls}반`:""} · 시간표상 수업 (${time(cur)})`};
+        title:res.pair ? "동아리 / 자율활동 · 두 경우 안내" : l.label, sub:res.pair ? pairText(res.pair) + " · 격주 자동 판정 없음 / 1학기 동아리 자료 기준" : `${cur.n}교시 · ${full(res.subj==="─▷"?"":res.subj)}${res.cls?` · ${res.cls}반`:""} · 시간표상 수업 (${time(cur)})`};
     }
     const l = deskLoc(t);
-    return {kind:"free", period:cur.n, loc:l, title:l.label, sub:`${cur.n}교시는 수업이 없어요 (${time(cur)}). 등록 자리이며 현재 재실 여부는 확인되지 않습니다.`};
+    return {kind:"free", period:cur.n, loc:l, title:res.pair ? "동아리 / 자율활동 · 두 경우 안내" : l.label, sub:res.pair ? pairText(res.pair) + " · 격주 자동 판정 없음 / 1학기 동아리 자료 기준" : `${cur.n}교시는 수업이 없어요 (${time(cur)}). 등록 자리이며 현재 재실 여부는 확인되지 않습니다.`};
   }
   const prev = [...list].reverse().find(p => toMin(p.e) <= min);
   const next = list.find(p => toMin(p.s) > min);
@@ -522,9 +537,9 @@ function renderDetail(){
     const res = resolve(t, showDay, p.n);
     const l = res ? locOf(res) : deskLoc(t);
     const isNow = st.period === p.n && showDay === n.day && st.kind === "class";
-    const info = res ? `${full(res.subj==="─▷"?"":res.subj)}${res.cls?` · ${res.cls}반`:""}${res.cont?" (연강)":""}` : "수업 없음 · 등록 자리(재실 미확인)";
+    const info = res?.pair ? "격주 교대 · 1학기 계획서 참고 / 현재 주차 자동 판정 안 함" : res ? `${full(res.subj==="─▷"?"":res.subj)}${res.cls?` · ${res.cls}반`:""}${res.cont?" (연강)":""}` : "수업 없음 · 등록 자리(재실 미확인)";
     return `<li><button class="stop ${isNow?"now":""}" data-p="${p.n}"><span class="node"><b class="${fcls(l.floor)}">${p.n}</b></span>
-      <span class="t"><b>${esc(l.label)}</b><span>${p.s}~${p.e} · ${esc(info)}</span></span></button></li>`;
+      <span class="t"><b>${res?.pair ? "동아리 / 자율활동" : esc(l.label)}</b>${res?.pair ? `<span style="display:block;white-space:normal">동아리일 때: ${esc(res.pair.club)}</span><span style="display:block;white-space:normal">자율활동일 때: ${esc(res.pair.auto)}</span>` : ""}<span>${p.s}~${p.e} · ${esc(info)}</span></span></button></li>`;
   }).join("");
 
   box.innerHTML = `
@@ -532,7 +547,7 @@ function renderDetail(){
     <section class="answer">
       <span class="badge big ${fcls(f)}">${f ? f : "?"}</span>
       <div><p class="who">${esc(t.name)} 선생님${t.homeroom ? " · "+t.homeroom+" 담임" : ""}${t.role ? " · "+esc(t.role) : ""}</p>
-      <span class="tag">${st.kind==="class" ? "시간표상 수업 장소" : st.kind==="break" ? "다음 교시 장소 · 현재 위치 아님" : "등록 자리 · 재실 미확인"}</span><h2>${esc(st.title)}</h2><p>${esc(st.sub)}</p>
+      <span class="tag">${st.res?.pair ? "격주 활동 · 두 경우 모두 표시" : st.kind==="class" ? "시간표상 수업 장소" : st.kind==="break" ? "다음 교시 장소 · 현재 위치 아님" : "등록 자리 · 재실 미확인"}</span><h2>${esc(st.title)}</h2><p>${esc(st.sub)}</p>
       ${st.res && st.res.guess ? `<span class="tag">교과 특성상 특별실 수업으로 추정한 위치예요</span>` : ""}
       ${(st.kind!=="class") && !d ? `<span class="tag">아직 자리가 등록되지 않았어요</span>` : ""}</div>
     </section>
@@ -545,6 +560,7 @@ function renderDetail(){
       ${placing ? `<p class="hint"><b>${viewFloor}층 도면에서 자리를 눌러 주세요.</b> 교무센터나 연구실 안의 책상 위치를 그대로 찍으면 돼요.</p>` : ""}
 
     </section>
+    ${CLUBS[t.name] ? `<section class="panel"><b>동아리 계획서 참고</b><p>${esc(CLUBS[t.name].club)} · ${esc(CLUBS[t.name].place)}</p><p class="small">2026학년도 1학기 자료입니다. 날짜별 장소가 다르거나 공란일 수 있으며, 2학기 장소는 확인이 필요합니다.</p></section>` : ""}
     <section class="panel">
       <div class="days" role="group" aria-label="요일">${[1,2,3,4,5].map(x => `<button data-d="${x}" aria-pressed="${showDay===x}">${DAYN[x]}</button>`).join("")}</div>
       <ol class="route">${stops}</ol>
