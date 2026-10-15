@@ -461,10 +461,19 @@ const nowT = () => { if (sim) return sim; const v=Object.fromEntries(new Intl.Da
 let selected = null, query = "", zoom = innerWidth < 820 ? 2.4 : 1.8, viewFloor = 4, userFloor = false, placing = false, viewDay = null;
 const fcls = f => f ? `f${f}` : "";
 
-function renderChip(){
-  const n = nowT(), cur = PERIODS.find(p => toMin(p.s) <= n.min && n.min < toMin(p.e) && p.n <= (DAY_LAST[n.day]||0));
+function renderChip() {
+  const n = nowT();
+  const isWeekday = n.day >= 1 && n.day <= 5;
+  const cur = PERIODS.find(p => isWeekday && p.n <= DAY_LAST[n.day] && toMin(p.s) <= n.min && n.min < toMin(p.e));
+  let label;
+  if (!isWeekday) label = "주말";
+  else if (cur) label = cur.n + "교시";
+  else if (n.min < toMin(PERIODS[0].s)) label = "수업 전";
+  else if (n.min >= toMin(PERIODS[3].e) && n.min < toMin(PERIODS[4].s)) label = "점심시간";
+  else if (n.min >= toMin(PERIODS.find(p => p.n === DAY_LAST[n.day]).e)) label = "수업 종료";
+  else label = "쉬는 시간";
   const c = $("chip");
-  c.textContent = `${sim ? "지정 시간 · " : ""}${DAYN[n.day]} ${pad(Math.floor(n.min/60))}:${pad(n.min%60)} · ${cur ? cur.n+"교시" : n.day===0||n.day===6 ? "주말" : n.min<toMin(PERIODS[0].s) ? "수업 전" : n.min>=toMin(PERIODS[DAY_LAST[n.day]-1].e) ? "수업 종료" : n.min>=toMin(PERIODS[3].e)&&n.min<toMin(PERIODS[4].s) ? "점심시간" : "쉬는 시간"}`;
+  c.textContent = `${sim ? "지정 시간 · " : ""}${DAYN[n.day]} ${pad(Math.floor(n.min / 60))}:${pad(n.min % 60)} · ${label}`;
   c.className = "chip" + (sim ? " sim" : "");
 }
 function renderList(){
