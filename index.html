@@ -145,6 +145,13 @@ body:not(.admin) .adminOnly{display:none!important}
 .hl{background:rgba(255,59,92,.10);border:4px solid var(--pin);box-shadow:0 0 0 2px rgba(255,255,255,.95);animation:none}
 @media (prefers-reduced-motion: no-preference){.hl{animation:clearRoomPulse 1.8s ease-in-out infinite}}
 @keyframes clearRoomPulse{0%,100%{background:rgba(255,59,92,.08);box-shadow:0 0 0 2px rgba(255,255,255,.95),0 0 0 3px rgba(255,59,92,.25)}50%{background:rgba(255,59,92,.15);box-shadow:0 0 0 2px rgba(255,255,255,.95),0 0 0 7px rgba(255,59,92,.22),0 0 12px rgba(255,59,92,.4)}}
+
+/* 교사 목록: 이름 / 과목·담임 / 위치를 일정한 세 줄로 정렬 */
+.row .rt{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;overflow:hidden}
+.row .rt b{display:block;font-size:1rem;line-height:1.45}
+.row .rt small{display:block;margin:0;font-size:.76rem;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.row .rt>span{font-size:.82rem;line-height:1.45}
+@media(max-width:380px){.row{gap:9px;padding:9px}.row .rt small{font-size:.72rem}}
 </style>
 </head>
 <body>
@@ -537,7 +544,7 @@ function renderList(){
     const meta = [t.main, t.homeroom ? t.homeroom+" 담임" : ""].filter(Boolean).join(" · ");
     return `<button class="row" data-id="${t.no}" aria-pressed="${selected===t.no}">
       <span class="badge ${fcls(f)}">${f ? f+"F" : "?"}</span>
-      <span class="rt"><b>${esc(t.name)} 선생님</b><small>${esc(meta)}</small><span>${esc(st.loc.label)}${st.kind==="after" ? " · 일과 종료" : ""}</span></span></button>`;
+      <span class="rt"><b>${esc(t.name)} 선생님</b><small title="${esc(meta)}">${esc(meta)}</small><span>${esc(st.loc.label)}${st.kind==="after" ? " · 일과 종료" : ""}</span></span></button>`;
   }).join("") : `<div class="empty">찾는 선생님이 없어요. 이름이나 과목을 다시 확인해 보세요.</div>`;
   $("list").querySelectorAll(".row").forEach(b => b.onclick = () => { selected = Number(b.dataset.id); userFloor = false; placing = false; viewDay = null; $("app").dataset.mode = "detail"; render(); scrollTo({top:0}); });
 }
