@@ -126,12 +126,31 @@ button{cursor:pointer}
 body:not(.admin) .adminOnly{display:none!important}
 .deskform{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
 .deskform input{flex:1;min-width:180px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+#homeLogo:focus-visible{outline:3px solid var(--brand);outline-offset:5px}
+
+/* 교실 이름을 가리지 않도록 점 대신 투명한 테두리만 사용 */
+.hl{background:transparent;border:3px solid var(--pin);box-shadow:0 0 0 1px white}
+.pin{background:transparent;border:2px solid var(--pin);box-shadow:none}
+.pin::after{border-width:2px}
+#simDay{min-width:90px;min-height:44px;color:var(--ink);background:var(--surface)}
+#simTime{min-width:150px;min-height:44px;cursor:pointer}
+
+/* 원형 위치 표시는 제거하고 교실 외곽선만 강조합니다. */
+.pin{display:none!important}
+.hl{background:transparent;border:3px solid var(--pin);box-shadow:0 0 0 1px white;pointer-events:none}
+@media (prefers-reduced-motion: no-preference){.hl{animation:roomBorderPulse 1.8s ease-in-out infinite}}
+@keyframes roomBorderPulse{0%,100%{border-color:var(--pin);box-shadow:0 0 0 1px white}50%{border-color:var(--pin);box-shadow:0 0 0 1px white,0 0 8px 2px var(--pin)}}
+
+/* 선택된 방: 옅은 채움 + 선명한 외곽선. 내부 글자는 그대로 보존 */
+.hl{background:rgba(255,59,92,.10);border:4px solid var(--pin);box-shadow:0 0 0 2px rgba(255,255,255,.95);animation:none}
+@media (prefers-reduced-motion: no-preference){.hl{animation:clearRoomPulse 1.8s ease-in-out infinite}}
+@keyframes clearRoomPulse{0%,100%{background:rgba(255,59,92,.08);box-shadow:0 0 0 2px rgba(255,255,255,.95),0 0 0 3px rgba(255,59,92,.25)}50%{background:rgba(255,59,92,.15);box-shadow:0 0 0 2px rgba(255,255,255,.95),0 0 0 7px rgba(255,59,92,.22),0 0 12px rgba(255,59,92,.4)}}
 </style>
 </head>
 <body>
 <div class="app" data-mode="search" id="app">
 <header class="top">
-<h1 class="logo"><i aria-hidden="true"></i>어디쌤</h1>
+<h1 class="logo"><button id="homeLogo" type="button" aria-label="어디쌤 처음 화면으로 돌아가기" style="all:unset;display:flex;align-items:center;gap:8px;cursor:pointer;border-radius:8px"><i aria-hidden="true"></i>어디쌤</button></h1>
 <div aria-live="polite" class="chip" id="chip">--:--</div>
 </header>
 <p class="small" style="padding:12px;border:1px solid #bbb;border-radius:12px">시간표 기반 예상 위치입니다. 실시간 재실 확인이 아니며 휴일·시험·보강·출장은 반영되지 않습니다. 시간은 한국 표준시 기준입니다. 지도에는 개인 책상 위치가 아닌, 선생님의 기본 교무실·학년실 위치가 표시됩니다.</p><div class="search">
@@ -144,7 +163,7 @@ body:not(.admin) .adminOnly{display:none!important}
 <details class="tools">
 <summary>요일·시간별 위치 조회</summary><p class="small">원하는 요일과 시간을 선택하면, 그 시간의 시간표상 장소를 확인할 수 있어요.</p>
 <div class="trow">
-<select aria-label="요일" id="simDay"><option value="1">월</option><option value="2">화</option><option value="3">수</option><option value="4">목</option><option value="5">금</option><option value="6">토</option><option value="0">일</option></select>
+<select aria-label="요일" id="simDay"><option value="" selected disabled>요일</option><option value="1">월</option><option value="2">화</option><option value="3">수</option><option value="4">목</option><option value="5">금</option><option value="6">토</option><option value="0">일</option></select>
 <input aria-label="시각" id="simTime" type="time" value="10:45"/>
 <button class="btn" id="simApply">선택한 시간으로 조회</button>
 <button class="btn ghost" id="simLive">현재 시간으로 돌아가기</button>
@@ -363,7 +382,7 @@ const ROOM_ALIAS = {"하브":"하브루타실","디베":"디베이트실","융1"
 // 엑셀에는 '학급'만 적혀 있는 특별실 수업 (추정값 — 실제와 다르면 고치세요)
 const SUBJECT_ROOM = {"음악":{room:"음악실1"},"음비":{room:"음악실1"},"미술":{room:"미술실"},"미비":{room:"미술실"},
   "정보":{room:"컴퓨터실1"},"데과":{room:"컴퓨터실1"},"체육":{text:"체육관·운동장"},"스포":{text:"체육관·운동장"}};
-const SUBJ_FULL = {"공국": "공통국어", "공수": "공통수학", "공영": "공통영어", "한국": "한국사", "통사": "통합사회", "통과": "통합과학", "체육": "체육", "음악": "음악", "미술": "미술", "정보": "정보", "동아": "동아리", "자율": "자율활동", "진로": "진로활동", "확통": "확률과 통계", "미적": "미적분", "기가": "기술·가정", "일회": "일본어 회화", "중회": "중국어 회화", "스포": "스포츠 생활", "과탐": "과학", "화언": "화법과 언어", "심국": "심화국어", "심영": "심화영어", "통수": "수학", "데과": "데이터 과학", "음비": "음악 감상과 비평", "미비": "미술 감상과 비평", "영2": "영어Ⅱ", "주탐": "주제탐구독서"};
+const SUBJ_FULL = {"공국": "공통국어", "공수": "공통수학", "공영": "공통영어", "한국": "한국사", "통사": "통합사회", "통과": "통합과학", "체육": "체육", "음악": "음악", "미술": "미술", "정보": "정보", "동아": "동아리", "자율": "자율활동", "진로": "진로활동", "확통": "확률과 통계", "미적": "미적분", "기가": "기술·가정", "일회": "일본어 회화", "중회": "중국어 회화", "스포": "스포츠 생활", "과탐": "물리", "화언": "화법과 언어", "심국": "심화국어", "심영": "심화영어", "통수": "통합수학", "데과": "데이터 과학", "음비": "음악 감상과 비평", "미비": "미술 감상과 비평", "영2": "영어Ⅱ", "주탐": "주제탐구독서"};
 // 선생님 자리(학교 공용값). 형식: {"김OO":{floor:3,x:400,y:50,memo:"창가 쪽"}}
 const DESKS_DEFAULT = {"박효정":{"floor":4,"x":72,"y":229},"방그래":{"floor":4,"x":72,"y":229},"임진영":{"floor":4,"x":72,"y":229},"윤영선":{"floor":3,"x":70,"y":246},"이숙희":{"floor":3,"x":70,"y":246},"박경진":{"floor":3,"x":70,"y":246},"윤정혜":{"floor":3,"x":470,"y":56},"이양지":{"floor":2,"x":1342,"y":136},"김옥자":{"floor":2,"x":70,"y":196},"배상임":{"floor":2,"x":70,"y":196},"류규하":{"floor":2,"x":70,"y":196},"신준철":{"floor":4,"x":72,"y":229},"양정민":{"floor":4,"x":72,"y":229},"오정훈":{"floor":4,"x":72,"y":229},"김성규":{"floor":3,"x":70,"y":246},"김소희":{"floor":3,"x":70,"y":246},"이경희":{"floor":3,"x":470,"y":56},"양해동":{"floor":2,"x":1342,"y":136},"김현주":{"floor":2,"x":70,"y":196},"정준":{"floor":2,"x":70,"y":196},"곽경미":{"floor":2,"x":70,"y":196},"장소영":{"floor":4,"x":72,"y":229},"김유진":{"floor":4,"x":72,"y":229},"신혜정":{"floor":5,"x":738,"y":147},"서연희":{"floor":3,"x":70,"y":246},"김성국":{"floor":3,"x":70,"y":246},"이주현":{"floor":3,"x":70,"y":246},"금영일":{"floor":2,"x":1342,"y":136},"우정연":{"floor":3,"x":470,"y":56},"박은주":{"floor":2,"x":70,"y":196},"정진엽":{"floor":2,"x":70,"y":196},"한성욱":{"floor":3,"x":470,"y":56},"민주영":{"floor":2,"x":1342,"y":136},"강신재":{"floor":3,"x":743,"y":56},"박상희":{"floor":2,"x":1342,"y":136},"조은진":{"floor":2,"x":70,"y":196},"조영산":{"floor":3,"x":470,"y":56},"최희정":{"floor":2,"x":1342,"y":136},"권수현":{"floor":3,"x":70,"y":246},"송지윤":{"floor":4,"x":72,"y":229},"김규나":{"floor":3,"x":470,"y":56},"권은숙":{"floor":2,"x":70,"y":196},"이경락":{"floor":3,"x":470,"y":56},"정은희":{"floor":3,"x":470,"y":56},"장성훈":{"floor":2,"x":1342,"y":136},"류승원":{"floor":2,"x":1342,"y":136},"배경애":{"floor":4,"x":72,"y":229},"지문성":{"floor":3,"x":70,"y":246},"조정래":{"floor":4,"x":72,"y":229},"김혜원":{"floor":3,"x":70,"y":246},"최정숙":{"floor":2,"x":70,"y":196},"이병국":{"floor":5,"x":738,"y":147},"김현정":{"floor":2,"x":70,"y":196},"한종수":{"floor":3,"x":743,"y":56},"오진석":{"floor":3,"x":743,"y":56},"우정섭":{"floor":3,"x":470,"y":56},"김병우":{"floor":3,"x":470,"y":56},"박소희":{"floor":3,"x":743,"y":56},"김정희":{"floor":3,"x":470,"y":56},"정종민":{"floor":3,"x":743,"y":56},"김경숙":{"floor":3,"x":470,"y":56},"이하늘":{"floor":5,"x":738,"y":147},"변강순":{"floor":4,"x":72,"y":229},"조현창":{"floor":3,"x":470,"y":56},"김지희":{"floor":2,"x":1342,"y":136},"정영순":{"floor":3,"x":70,"y":246},"손영아":{"floor":3,"x":743,"y":56},"최희철":{"floor":5,"x":578,"y":48},"곽세진":{"floor":2,"x":1342,"y":136},"진혜정":{"floor":2,"x":1342,"y":136}};
 
@@ -398,12 +417,17 @@ for(const t of TEACHERS){
 }
 const TEACHING_ROOM={"박소희":{subjects:["음악","음비"],room:"음악실1"},"김정희":{subjects:["음악","음비"],room:"음악실2"},"정종민":{subjects:["미술","미비"],room:"미술실"},"김경숙":{subjects:["미술","미비"],room:"미술실"},"이하늘":{subjects:["정보","데과"],room:"컴퓨터실1"},"변강순":{subjects:["정보","데과"],room:"컴퓨터실2"}};
 const freeNote=t=>t.homeroom ? t.homeroom.split("-")[0]+"학년실 또는 담당 "+t.homeroom+"반 교실에 계실 수 있어요." : "";
+// 김정은 선생님은 최희철 선생님과 같은 기본 위치
+if(desks["최희철"]) desks["김정은"] = {...desks["최희철"]};
 // 선생님 대표 과목
 TEACHERS.forEach(t => {
   const cnt = {};
   Object.values(t.tt).forEach(d => Object.values(d).forEach(([s]) => { if (!["자율","진로","동아","─▷"].includes(s) && !/^[A-F]\d?$/.test(s)) cnt[s]=(cnt[s]||0)+1; }));
   t.searchSubjects=Object.keys(cnt).map(full).join(" ");
-  t.main = Object.entries(cnt).filter(([code])=>code!=="통수").sort((a,b)=>b[1]-a[1]).slice(0,2).map(e=>full(e[0])).join("·");
+  t.main = Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,2).map(e=>full(e[0])).join("·");
+  if(t.name === "최희철") t.main = "진로";
+  if(t.name === "지문성") t.main = "화학";
+  t.searchSubjects += " " + t.main;
 });
 
 /* =========================================================
@@ -425,6 +449,7 @@ function resolve(t, day, p){
   if (subj === "─▷"){ const prev = resolve(t, day, p-1); return prev ? {...prev, cont:true} : null; }
   let r = null, text = null, guess = false;
   const cls = isClass(room) ? room : null;
+  if(subj === "과탐" && cls && cls.startsWith("1-"))return {subj,cls,room:ROOMS["물리실"],text:null,guess:false};
   const specific=TEACHING_ROOM[t.name];
   if(specific && specific.subjects.includes(subj))return {subj,cls,room:ROOMS[specific.room],text:null,guess:false};
   if (room && !isClass(room)){ r=ROOMS[ROOM_ALIAS[room] || room] || null; if(!r) text=room+" (도면 위치 미등록)"; }
@@ -595,8 +620,27 @@ function renderDetail(){
 
 function render(){ renderChip(); renderList(); renderDetail(); }
 
-$("q").addEventListener("input", e => { query = e.target.value; renderList(); });
-$("simApply").onclick = () => { sim = {day:Number($("simDay").value), min:toMin($("simTime").value||"10:45")}; userFloor = false; render(); };
+function goHome(){
+ selected=null; query=""; sim=null; viewDay=null; placing=false; userFloor=false; viewFloor=4;
+ zoom=innerWidth<820?2.4:1.8;
+ $("q").value="";
+ $("app").dataset.mode="list";
+ document.querySelectorAll("details[open]").forEach(el=>el.open=false);
+ render(); scrollTo({top:0,behavior:"auto"});
+}
+$("homeLogo").onclick=goHome;
+$("q").addEventListener("input", e => {
+  query = e.target.value;
+  // 상세 화면에서 검색해도 결과 목록을 즉시 표시합니다.
+  $("app").dataset.mode = "list";
+  renderList();
+});
+$("simApply").onclick = () => {
+ if($("simDay").value===""){alert("요일을 선택해 주세요.");$("simDay").focus();return;}
+ if(!$("simTime").value){alert("시간을 선택해 주세요.");$("simTime").focus();return;}
+ sim={day:Number($("simDay").value),min:toMin($("simTime").value)};userFloor=false;render();
+};
+$("simTime").addEventListener("click",function(){try{if(typeof this.showPicker==="function")this.showPicker();}catch(e){this.focus();}});
 $("simLive").onclick = () => { sim = null; userFloor = false; render(); };
 
 
