@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
 <title>어디쌤 · 비슬고 선생님 위치 안내</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Jua&family=Black+Han+Sans&amp;family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Jua&amp;family=Black+Han+Sans&amp;family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
 <style>
 :root{
   box-sizing:border-box;
@@ -152,17 +152,25 @@ body:not(.admin) .adminOnly{display:none!important}
 .row .rt small{display:block;margin:0;font-size:.76rem;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .row .rt>span{font-size:.82rem;line-height:1.45}
 @media(max-width:380px){.row{gap:9px;padding:9px}.row .rt small{font-size:.72rem}}
+
+.floor-guide{font-size:.76rem;line-height:1.6;color:var(--muted);padding:0 10px}
+.floor-heading{display:flex;align-items:center;justify-content:space-between;margin:14px 4px 5px;padding:9px 10px;border-bottom:2px solid var(--line);font-size:.95rem;color:var(--ink)}
+.floor-heading small{font-size:.75rem;font-weight:500;color:var(--muted)}
+.off-duty .rt .off-duty-label{font-weight:800;color:var(--ink)}
+.off-duty{border-left:3px solid var(--brand)}
+
+.report-linkbar{display:flex;justify-content:flex-end;margin:8px 0 14px}.report-link{display:inline-flex;align-items:center;min-height:44px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;color:var(--brand);font-size:.86rem;font-weight:700;text-decoration:none}.report-link:hover{background:var(--soft)}.report-link:focus-visible{outline:3px solid var(--brand);outline-offset:3px}
 </style>
 </head>
 <body>
 <div class="app" data-mode="search" id="app">
 <header class="top">
-<h1 class="logo"><button id="homeLogo" type="button" aria-label="어디쌤 처음 화면으로 돌아가기" style="all:unset;display:flex;align-items:center;gap:8px;cursor:pointer;border-radius:8px"><i aria-hidden="true"></i>어디쌤</button></h1>
+<h1 class="logo"><button aria-label="어디쌤 처음 화면으로 돌아가기" id="homeLogo" style="all:unset;display:flex;align-items:center;gap:8px;cursor:pointer;border-radius:8px" type="button"><i aria-hidden="true"></i>어디쌤</button></h1>
 <div aria-live="polite" class="chip" id="chip">--:--</div>
 </header>
 <p class="small" style="padding:12px;border:1px solid #bbb;border-radius:12px">시간표 기반 예상 위치입니다. 실시간 재실 확인이 아니며 휴일·시험·보강·출장은 반영되지 않습니다. 시간은 한국 표준시 기준입니다. 지도에는 개인 책상 위치가 아닌, 선생님의 기본 교무실·학년실 위치가 표시됩니다.</p><div class="search">
 <input aria-label="선생님 검색" autocomplete="off" id="q" placeholder="선생님 이름, 과목, 담임 반(예: 2-3)으로 찾기" type="search"/>
-</div>
+</div><div class="report-linkbar"><a class="report-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdG_mF5qyMwz_PaR6eZV8yyYXKdkoH-XhpG5xZaa5xLcB55qA/viewform?usp=publish-editor" rel="noopener noreferrer" target="_blank">위치·시간표 오류 제보 ↗</a></div>
 <div class="layout">
 <aside aria-label="선생님 목록" class="listcol"><div id="list"></div></aside>
 <main class="detailcol" id="detail"></main>
@@ -170,14 +178,11 @@ body:not(.admin) .adminOnly{display:none!important}
 <details class="tools">
 <summary>요일·시간별 위치 조회</summary><p class="small">원하는 요일과 시간을 선택하면, 그 시간의 시간표상 장소를 확인할 수 있어요.</p>
 <div class="trow">
-<select aria-label="요일" id="simDay"><option value="" selected disabled>요일</option><option value="1">월</option><option value="2">화</option><option value="3">수</option><option value="4">목</option><option value="5">금</option><option value="6">토</option><option value="0">일</option></select>
+<select aria-label="요일" id="simDay"><option disabled="" selected="" value="">요일</option><option value="1">월</option><option value="2">화</option><option value="3">수</option><option value="4">목</option><option value="5">금</option><option value="6">토</option><option value="0">일</option></select>
 <input aria-label="시각" id="simTime" type="time" value="10:45"/>
 <button class="btn" id="simApply">선택한 시간으로 조회</button>
 <button class="btn ghost" id="simLive">현재 시간으로 돌아가기</button>
 </div>
-
-
-
 <p class="small">조회 전용입니다. 자리와 시간표는 이 파일에 포함된 데이터를 기준으로 안내합니다. 교시 시간은 학교 확인이 필요합니다.</p>
 </details>
 </div>
@@ -422,7 +427,7 @@ for(const t of TEACHERS){
  const r=ROOM_DEF.find(d=>d[0]===grade+"학년실");
  if(r){const [_,floor,x1,y1,x2,y2]=r;desks[t.name]={floor,x:(x1+x2)/2,y:(y1+y2)/2};}
 }
-const TEACHING_ROOM={"박소희":{subjects:["음악","음비"],room:"음악실1"},"김정희":{subjects:["음악","음비"],room:"음악실2"},"정종민":{subjects:["미술","미비"],room:"미술실"},"김경숙":{subjects:["미술","미비"],room:"미술실"},"이하늘":{subjects:["정보","데과"],room:"컴퓨터실1"},"변강순":{subjects:["정보","데과"],room:"컴퓨터실2"}};
+const TEACHING_ROOM={"박소희":{subjects:["음악","음비"],room:"음악실1"},"김정희":{subjects:["음악","음비"],room:"음악실2"},"정종민":{subjects:["미술","미비"],room:"창체활동실·미술실·헌책방"},"김경숙":{subjects:["미술","미비"],room:"미술실"},"이하늘":{subjects:["정보","데과"],room:"컴퓨터실1"},"변강순":{subjects:["정보","데과"],room:"컴퓨터실2"}};
 const freeNote=t=>t.homeroom ? t.homeroom.split("-")[0]+"학년실 또는 담당 "+t.homeroom+"반 교실에 계실 수 있어요." : "";
 // 김정은 선생님은 최희철 선생님과 같은 기본 위치
 if(desks["최희철"]) desks["김정은"] = {...desks["최희철"]};
@@ -537,16 +542,19 @@ function renderChip() {
   c.className = "chip" + (sim ? " sim" : "");
 }
 function renderList(){
-  const n = nowT(), q = query.trim().replace(/\s/g,"");
-  const items = TEACHERS.filter(t => !q || t.name.includes(q) || t.searchSubjects.replace(/\s/g,"").includes(q) || (t.homeroom && t.homeroom.includes(q)));
-  $("list").innerHTML = items.length ? items.map(t => {
-    const st = statusAt(t, n.day, n.min), f = st.loc.floor;
-    const meta = [t.main, t.homeroom ? t.homeroom+" 담임" : ""].filter(Boolean).join(" · ");
-    return `<button class="row" data-id="${t.no}" aria-pressed="${selected===t.no}">
-      <span class="badge ${fcls(f)}">${f ? f+"F" : "?"}</span>
-      <span class="rt"><b>${esc(t.name)} 선생님</b><small title="${esc(meta)}">${esc(meta)}</small><span>${esc(st.loc.label)}${st.kind==="after" ? " · 일과 종료" : ""}</span></span></button>`;
-  }).join("") : `<div class="empty">찾는 선생님이 없어요. 이름이나 과목을 다시 확인해 보세요.</div>`;
-  $("list").querySelectorAll(".row").forEach(b => b.onclick = () => { selected = Number(b.dataset.id); userFloor = false; placing = false; viewDay = null; $("app").dataset.mode = "detail"; render(); scrollTo({top:0}); });
+ const n=nowT(),q=query.trim().replace(/\s/g,"");
+ const items=TEACHERS.filter(t=>!q||t.name.includes(q)||t.searchSubjects.replace(/\s/g,"").includes(q)||(t.homeroom&&t.homeroom.includes(q)));
+ const groups=new Map();
+ for(const t of items){const f=deskLoc(t).floor||0;if(!groups.has(f))groups.set(f,[]);groups.get(f).push(t);}
+ $("list").innerHTML=items.length ? `<p class="floor-guide">기본 교무실·학년실의 층별 목록입니다. 각 선생님 아래에는 조회 시간의 장소를 표시합니다.</p>`+[...groups.keys()].sort((a,b)=>(a||99)-(b||99)).map(f=>{
+  const rows=groups.get(f);
+  return `<section class="floor-group"><h3 class="floor-heading">${f?f+"층":"기본 위치 미등록"}<small>${rows.length}명</small></h3>`+rows.map(t=>{
+   const st=statusAt(t,n.day,n.min),off=notWorking(t,n.day);
+   const meta=[t.main,t.homeroom?t.homeroom+" 담임":""].filter(Boolean).join(" · ");
+   return `<button class="row${off?" off-duty":""}" data-id="${t.no}" aria-pressed="${selected===t.no}"><span class="badge ${fcls(f)}" title="기본 장소 층">${f?f+"F":"미등록"}</span><span class="rt"><b>${esc(t.name)} 선생님</b><small title="${esc(meta)}">${esc(meta)}</small><span class="${off?"off-duty-label":""}">${esc(st.loc.label)}${st.kind==="after"?" · 일과 종료":""}</span></span></button>`;
+  }).join("")+`</section>`;
+ }).join("") : `<div class="empty">찾는 선생님이 없어요. 이름이나 과목을 다시 확인해 보세요.</div>`;
+ $("list").querySelectorAll(".row").forEach(b=>b.onclick=()=>{selected=Number(b.dataset.id);userFloor=false;placing=false;viewDay=null;$("app").dataset.mode="detail";render();scrollTo({top:0});});
 }
 
 function mapBlock(floor, st, t){
@@ -661,6 +669,5 @@ setInterval(() => {
   if (sig !== lastSig){ lastSig = sig; renderDetail(); }
 }, 30000);
 </script>
-
 </body>
 </html>
