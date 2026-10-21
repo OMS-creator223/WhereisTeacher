@@ -160,6 +160,12 @@ body:not(.admin) .adminOnly{display:none!important}
 .off-duty{border-left:3px solid var(--brand)}
 
 .report-linkbar{display:flex;justify-content:flex-end;margin:8px 0 14px}.report-link{display:inline-flex;align-items:center;min-height:44px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;color:var(--brand);font-size:.86rem;font-weight:700;text-decoration:none}.report-link:hover{background:var(--soft)}.report-link:focus-visible{outline:3px solid var(--brand);outline-offset:3px}
+
+.report-linkbar{justify-content:flex-start;gap:8px;flex-wrap:wrap}.report-link{background:var(--surface);font-family:inherit;cursor:pointer}
+#timeTools{margin:0 0 12px}#timeTools>summary{display:none}
+#floorFilter{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 14px}
+#floorFilter button{flex:1;min-width:42px;min-height:44px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit;font-size:.86rem;cursor:pointer}
+#floorFilter button[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink);border-color:var(--brand);font-weight:700}
 </style>
 </head>
 <body>
@@ -170,12 +176,7 @@ body:not(.admin) .adminOnly{display:none!important}
 </header>
 <p class="small" style="padding:12px;border:1px solid #bbb;border-radius:12px">시간표 기반 예상 위치입니다. 실시간 재실 확인이 아니며 휴일·시험·보강·출장은 반영되지 않습니다. 시간은 한국 표준시 기준입니다. 지도에는 개인 책상 위치가 아닌, 선생님의 기본 교무실·학년실 위치가 표시됩니다.</p><div class="search">
 <input aria-label="선생님 검색" autocomplete="off" id="q" placeholder="선생님 이름, 과목, 담임 반(예: 2-3)으로 찾기" type="search"/>
-</div><div class="report-linkbar"><a class="report-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdG_mF5qyMwz_PaR6eZV8yyYXKdkoH-XhpG5xZaa5xLcB55qA/viewform?usp=publish-editor" rel="noopener noreferrer" target="_blank">위치·시간표 오류 제보 ↗</a></div>
-<div class="layout">
-<aside aria-label="선생님 목록" class="listcol"><div id="list"></div></aside>
-<main class="detailcol" id="detail"></main>
-</div>
-<details class="tools">
+</div><div class="report-linkbar"><button aria-controls="timeTools" aria-expanded="false" class="report-link" id="timeToggle" type="button">요일·시간별 위치 조회</button><a class="report-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdG_mF5qyMwz_PaR6eZV8yyYXKdkoH-XhpG5xZaa5xLcB55qA/viewform?usp=publish-editor" rel="noopener noreferrer" target="_blank">위치·시간표 오류 제보 ↗</a></div><details class="tools" id="timeTools">
 <summary>요일·시간별 위치 조회</summary><p class="small">원하는 요일과 시간을 선택하면, 그 시간의 시간표상 장소를 확인할 수 있어요.</p>
 <div class="trow">
 <select aria-label="요일" id="simDay"><option disabled="" selected="" value="">요일</option><option value="1">월</option><option value="2">화</option><option value="3">수</option><option value="4">목</option><option value="5">금</option><option value="6">토</option><option value="0">일</option></select>
@@ -184,7 +185,12 @@ body:not(.admin) .adminOnly{display:none!important}
 <button class="btn ghost" id="simLive">현재 시간으로 돌아가기</button>
 </div>
 <p class="small">조회 전용입니다. 자리와 시간표는 이 파일에 포함된 데이터를 기준으로 안내합니다. 교시 시간은 학교 확인이 필요합니다.</p>
-</details>
+</details><nav aria-label="기본 위치 층 선택" id="floorFilter"><button aria-pressed="true" data-floor="0" type="button">전체</button><button aria-pressed="false" data-floor="1" type="button">1층</button><button aria-pressed="false" data-floor="2" type="button">2층</button><button aria-pressed="false" data-floor="3" type="button">3층</button><button aria-pressed="false" data-floor="4" type="button">4층</button><button aria-pressed="false" data-floor="5" type="button">5층</button></nav>
+<div class="layout">
+<aside aria-label="선생님 목록" class="listcol"><div id="list"></div></aside>
+<main class="detailcol" id="detail"></main>
+</div>
+
 </div>
 <script>
 /* ===== 데이터 (엑셀 「2026학년도 2학기 전체교사시간표」에서 변환) ===== */
@@ -541,9 +547,10 @@ function renderChip() {
   c.textContent = `${sim ? "지정 시간 · " : ""}${DAYN[n.day]} ${pad(Math.floor(n.min / 60))}:${pad(n.min % 60)} · ${label}`;
   c.className = "chip" + (sim ? " sim" : "");
 }
+let floorFilter=0;
 function renderList(){
  const n=nowT(),q=query.trim().replace(/\s/g,"");
- const items=TEACHERS.filter(t=>!q||t.name.includes(q)||t.searchSubjects.replace(/\s/g,"").includes(q)||(t.homeroom&&t.homeroom.includes(q)));
+ const items=TEACHERS.filter(t=>(!floorFilter||deskLoc(t).floor===floorFilter)&&(!q||t.name.includes(q)||t.searchSubjects.replace(/\s/g,"").includes(q)||(t.homeroom&&t.homeroom.includes(q))));
  const groups=new Map();
  for(const t of items){const f=deskLoc(t).floor||0;if(!groups.has(f))groups.set(f,[]);groups.get(f).push(t);}
  $("list").innerHTML=items.length ? `<p class="floor-guide">기본 교무실·학년실의 층별 목록입니다. 각 선생님 아래에는 조회 시간의 장소를 표시합니다.</p>`+[...groups.keys()].sort((a,b)=>(a||99)-(b||99)).map(f=>{
@@ -636,7 +643,7 @@ function renderDetail(){
 function render(){ renderChip(); renderList(); renderDetail(); }
 
 function goHome(){
- selected=null; query=""; sim=null; viewDay=null; placing=false; userFloor=false; viewFloor=4;
+ floorFilter=0;syncFloorFilter(); selected=null; query=""; sim=null; viewDay=null; placing=false; userFloor=false; viewFloor=4;
  zoom=innerWidth<820?2.4:1.8;
  $("q").value="";
  $("app").dataset.mode="list";
@@ -644,6 +651,10 @@ function goHome(){
  render(); scrollTo({top:0,behavior:"auto"});
 }
 $("homeLogo").onclick=goHome;
+function syncFloorFilter(){document.querySelectorAll("#floorFilter button").forEach(b=>b.setAttribute("aria-pressed",String(Number(b.dataset.floor)===floorFilter)));}
+document.querySelectorAll("#floorFilter button").forEach(b=>b.onclick=()=>{floorFilter=Number(b.dataset.floor);syncFloorFilter();$("app").dataset.mode="list";renderList();});
+$("timeToggle").onclick=()=>{const el=$("timeTools");el.open=!el.open;};
+$("timeTools").addEventListener("toggle",()=>$("timeToggle").setAttribute("aria-expanded",String($("timeTools").open)));
 $("q").addEventListener("input", e => {
   query = e.target.value;
   // 상세 화면에서 검색해도 결과 목록을 즉시 표시합니다.
