@@ -1,1 +1,0 @@
-const IMG = {"5":{"w":1555,"h":306,"data":"image-01.png"},"4":{"w":1549,"h":425,"data":"image-02.png"},"3":{"w":1556,"h":478,"data":"image-03.png"},"2":{"w":1551,"h":372,"data":"image-04.png"},"1":{"w":1551,"h":405,"data":"image-05.png"}};
