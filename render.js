@@ -28,19 +28,20 @@ let savedListScroll=0,savedPageScroll=0;
 let floorFilter=0;
 function renderList(){
  const n=nowT(),q=query.trim().replace(/\s/g,"");
- const items=TEACHERS.filter(t=>(!floorFilter||deskLoc(t).floor===floorFilter)&&(!q||t.name.includes(q)||t.searchSubjects.replace(/\s/g,"").includes(q)||(t.homeroom&&t.homeroom.includes(q))));
+ $("app").classList.toggle("search-results",!!q);
+ const items=TEACHERS.filter(t=>(!!q||!floorFilter||deskLoc(t).floor===floorFilter)&&(!q||t.name.includes(q)||t.searchSubjects.replace(/\s/g,"").includes(q)||(t.homeroom&&t.homeroom.includes(q))));
  const groups=new Map();
  for(const t of items){const f=deskLoc(t).floor||0;if(!groups.has(f))groups.set(f,[]);groups.get(f).push(t);}
- $("list").innerHTML=items.length ? `<p class="floor-guide">기본 교무실·학년실의 층별 목록입니다. 각 선생님 아래에는 조회 시간의 장소를 표시합니다.</p>`+[...groups.keys()].sort((a,b)=>(a||99)-(b||99)).map(f=>{
+ $("list").innerHTML=items.length ? (q ? `<p class="search-count" role="status">검색 결과 ${items.length}명</p>` : `<p class="floor-guide">기본 교무실·학년실의 층별 목록입니다. 각 선생님 아래에는 조회 시간의 장소를 표시합니다.</p>`)+[...groups.keys()].sort((a,b)=>(a||99)-(b||99)).map(f=>{
   const rows=groups.get(f);
   return `<section class="floor-group"><h3 class="floor-heading">${f?f+"층":"기본 위치 미등록"}<small>${rows.length}명</small></h3>`+rows.map(t=>{
    const st=statusAt(t,n.day,n.min),off=notWorking(t,n.day);
    const meta=[t.main,t.homeroom?t.homeroom+" 담임":""].filter(Boolean).join(" · ");
    return `<button class="row${off?" off-duty":""}" data-id="${t.no}" aria-pressed="${selected===t.no}"><span class="badge ${fcls(f)}" title="기본 장소 층">${f?f+"F":"미등록"}</span><span class="rt"><b>${esc(t.name)} 선생님</b><small title="${esc(meta)}">${esc(meta)}</small><span class="${off?"off-duty-label":""}">${esc(st.loc.label)}${st.kind==="after"?" · 일과 종료":""}</span></span></button>`;
   }).join("")+`</section>`;
- }).join("") : `<div class="empty">${floorFilter ? "선택한 층에서 검색 결과가 없어요." : "찾는 선생님이 없어요. 이름이나 과목을 다시 확인해 보세요."}${floorFilter ? `<button type="button" class="btn" id="searchAllFloors">전체 층에서 찾기</button>` : ""}</div>`;
+ }).join("") : `<div class="empty">${!q && floorFilter ? "선택한 층에서 검색 결과가 없어요." : "찾는 선생님이 없어요. 이름이나 과목을 다시 확인해 보세요."}${!q && floorFilter ? `<button type="button" class="btn" id="searchAllFloors">전체 층에서 찾기</button>` : ""}</div>`;
  $("searchAllFloors") && ($("searchAllFloors").onclick=()=>{floorFilter=0;syncFloorFilter();renderList();});
- $("list").querySelectorAll(".row").forEach(b=>b.onclick=()=>{savedPageScroll=window.scrollY;savedListScroll=document.querySelector(".listcol").scrollTop;selected=Number(b.dataset.id);zoom=1;userFloor=false;placing=false;viewDay=null;enterDetailHistory();$("app").dataset.mode="detail";render();scrollTo({top:0});});
+ $("list").querySelectorAll(".row").forEach(b=>b.onclick=()=>{$("q").blur();savedPageScroll=window.scrollY;savedListScroll=document.querySelector(".listcol").scrollTop;selected=Number(b.dataset.id);zoom=1;userFloor=false;placing=false;viewDay=null;enterDetailHistory();$("app").dataset.mode="detail";render();scrollTo({top:0});});
 }
 
 function mapBlock(floor, st, t){
