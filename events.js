@@ -33,6 +33,8 @@ $("q").addEventListener("input", e => {
   // 상세 화면에서 검색해도 결과 목록을 즉시 표시합니다.
   $("app").dataset.mode = "list";
   renderList();
+  document.querySelector(".listcol").scrollTop=0;
+  requestAnimationFrame(updateSearchViewport);
 });
 $("simApply").onclick = () => {
  if($("simDay").value===""){alert("요일을 선택해 주세요.");$("simDay").focus();return;}
@@ -64,3 +66,24 @@ setInterval(() => {
     lastSig=sig;renderList();renderDetail();
   }
 }, 30000);
+
+// 화면 키보드가 차지하는 영역을 제외한 검색 결과 높이입니다.
+function updateSearchViewport(){
+ const app=$("app");
+ if(!app.classList.contains("search-results") || app.dataset.mode==="detail")return;
+ const col=document.querySelector(".listcol"),v=window.visualViewport;
+ const bottom=v ? v.offsetTop+v.height : window.innerHeight;
+ app.style.setProperty("--search-results-height",Math.max(72,Math.floor(bottom-col.getBoundingClientRect().top-12))+"px");
+}
+$("q").addEventListener("focus",()=>{
+ if(query.trim()){
+  $("app").dataset.mode="list";
+  requestAnimationFrame(()=>{ $("q").scrollIntoView({block:"start",behavior:"auto"});updateSearchViewport(); });
+ }
+});
+window.addEventListener("resize",updateSearchViewport);
+window.addEventListener("scroll",updateSearchViewport,{passive:true});
+if(window.visualViewport){
+ window.visualViewport.addEventListener("resize",updateSearchViewport);
+ window.visualViewport.addEventListener("scroll",updateSearchViewport);
+}
