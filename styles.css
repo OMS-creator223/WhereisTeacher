@@ -281,3 +281,16 @@ body{letter-spacing:-.025em;line-height:1.6}
  0%,100%{background:rgba(255,59,92,.08);box-shadow:0 0 0 var(--room-edge,.5px) rgba(255,255,255,.95),0 0 0 var(--room-edge,.5px) rgba(255,59,92,.25)}
  50%{background:rgba(255,59,92,.15);box-shadow:0 0 0 var(--room-edge,.5px) rgba(255,255,255,.95),0 0 0 var(--room-halo,1.75px) rgba(255,59,92,.22),0 0 var(--room-glow,3px) rgba(255,59,92,.4)}
 }
+
+/* 検索結果を検索欄の直下に集約（通常の配色は維持） */
+.app.search-results:not([data-mode="detail"]) > .report-linkbar,
+.app.search-results:not([data-mode="detail"]) > #timeTools,
+.app.search-results:not([data-mode="detail"]) > #floorFilter{display:none}
+.app.search-results:not([data-mode="detail"]) > .search{margin-bottom:4px}
+.app.search-results:not([data-mode="detail"]) .layout{grid-template-columns:minmax(0,1fr);gap:0}
+.app.search-results:not([data-mode="detail"]) .detailcol{display:none}
+.app.search-results:not([data-mode="detail"]) .listcol{position:relative;top:auto;margin-top:0;max-height:var(--search-results-height,45vh);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.app.search-results .floor-heading,.app.search-results .floor-guide{display:none}
+.app.search-results .floor-group{margin:0;padding:0}
+.search-count{margin:0;padding:7px 10px;font-size:.8rem;color:var(--muted)}
+.search input{scroll-margin-top:8px}
