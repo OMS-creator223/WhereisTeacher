@@ -52,7 +52,7 @@ function statusAt(t, day, min){
     if (res){
       const l = locOf(res);
       return {kind:"class", period:cur.n, loc:l, res,
-        title:l.label, sub:`${cur.n}교시 · ${full(res.subj==="─▷"?"":res.subj)}${res.cls?` · ${res.cls}반`:""} · 시간표상 수업 (${time(cur)})`};
+        title:l.label, sub:`${cur.n}교시 · ${subjectLabel(t,res.subj==="─▷"?"":res.subj)}${res.cls?` · ${res.cls}반`:""} · 시간표상 수업 (${time(cur)})`};
     }
     const l = deskLoc(t);
     return {kind:"free", period:cur.n, loc:l, title:l.label, sub:`${cur.n}교시는 수업이 없어요 (${time(cur)}).${t.homeroom ? " "+freeNote(t) : ""}`};
