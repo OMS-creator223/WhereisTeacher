@@ -77,7 +77,7 @@ function renderDetail(){
     const res = resolve(t, showDay, p.n);
     const l = res ? locOf(res) : deskLoc(t);
     const isNow = st.period === p.n && showDay === n.day && st.kind === "class";
-    const info = notWorking(t,showDay) ? "근무일 아님" : res ? `${full(res.subj==="─▷"?"":res.subj)}${res.cls?` · ${res.cls}반`:""}${res.cont?" (연강)":""}` : "수업 없음"+(t.homeroom ? " · "+freeNote(t) : "");
+    const info = notWorking(t,showDay) ? "근무일 아님" : res ? `${subjectLabel(t,res.subj==="─▷"?"":res.subj)}${res.cls?` · ${res.cls}반`:""}${res.cont?" (연강)":""}` : "수업 없음"+(t.homeroom ? " · "+freeNote(t) : "");
     return `<li><button class="stop ${isNow?"now":""}" data-p="${p.n}"><span class="node"><b class="${fcls(l.floor)}">${p.n}</b></span>
       <span class="t"><b>${esc(l.label)}</b><span>${p.s}~${p.e} · ${esc(info)}</span></span></button></li>`;
   }).join("");
@@ -100,6 +100,7 @@ function renderDetail(){
       ${placing ? `<p class="hint"><b>${viewFloor}층 도면에서 자리를 눌러 주세요.</b> 교무센터나 연구실 안의 책상 위치를 그대로 찍으면 돼요.</p>` : ""}
 
     </section>
+    ${gradeSubjectsHtml(t)}
     <section class="panel">
       <div class="days" role="group" aria-label="요일">${[1,2,3,4,5].map(x => `<button data-d="${x}" aria-pressed="${showDay===x}">${DAYN[x]}</button>`).join("")}</div>
       <ol class="route">${stops}</ol>
