@@ -31,9 +31,18 @@ if(desks["최희철"]) desks["김정은"] = {...desks["최희철"]};
 // 수업 장소와 담당 과목은 서로 독립적으로 관리합니다.
 // 사용자 확인이 끝난 선택수업만 과목명에 연결합니다.
 const CONFIRMED_ELECTIVES = {
-  "이양지": {"C": {grade:2, subject:"주제탐구독서"}},
-  "장성훈": {"A": {grade:2, subject:"물리"}, "B": {grade:2, subject:"물리"}},
-  "지문성": {"A": {grade:2, subject:"화학"}, "B": {grade:2, subject:"화학"}}
+ "이양지":{"C":{grade:2,subject:"주제탐구독서"}},
+ "박경진":{"C1":{grade:2,subject:"주제탐구독서"}},
+ "김옥자":{"C2":{grade:2,subject:"주제탐구독서"}},
+ "배상임":{"C3":{grade:2,subject:"주제탐구독서"}},
+ "류규하":{"C4":{grade:2,subject:"주제탐구독서"}},
+ "이경희":{"C":{grade:2,subject:"미적분"}},
+ "양해동":{"C1":{grade:2,subject:"미적분"}},
+ "서연희":{"C":{grade:2,subject:"영미문학읽기"}},
+ "김성국":{"C1":{grade:2,subject:"영미문학읽기"}},
+ "이주현":{"C2":{grade:2,subject:"영미문학읽기"}},
+ "장성훈":{"A":{grade:2,subject:"물리"},"B":{grade:2,subject:"물리"}},
+ "지문성":{"A":{grade:2,subject:"화학"},"B":{grade:2,subject:"화학"}}
 };
 function subjectLabel(t, code) {
  const known=CONFIRMED_ELECTIVES[t.name]?.[code];
