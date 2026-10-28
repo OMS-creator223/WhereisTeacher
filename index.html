@@ -10,6 +10,13 @@
 <link href="styles.css?v=20260930-search4" rel="stylesheet"/>
 <style>
 .update-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap;margin:4px 0 12px}.update-actions button{font-size:12px;min-height:38px}.update-actions #updateStatus{font-size:12px;color:#35654c}.time-action{margin:12px 0}.time-action button{width:100%;text-align:left;padding:15px 18px;border:1px solid #b9d5dc;border-left:4px solid #16758a;border-radius:14px;background:#edf7fa;color:#174853;font:700 14px 'Noto Sans KR',sans-serif;cursor:pointer}.time-action span{display:block;font-size:11px;font-weight:400;margin:5px 0 0 22px;color:#54737d}#timeTools{background:#f5fafb;border:1px solid #c9dce2;border-radius:14px;padding:16px;margin-bottom:16px}.help-area{border-top:1px solid #dce3e6;padding:18px 0 14px;margin-top:24px}.help-area a{font-size:12px;color:#687980;text-decoration:underline;text-underline-offset:4px}.app-version{padding-bottom:24px}
+
+:root{--query-bg:#edf7fa;--query-border:#b9d5dc;--query-accent:#16758a;--query-text:#174853;--query-muted:#54737d;--query-panel:#f5fafb;--query-input:#fff}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--query-bg:#182e38;--query-border:#416775;--query-accent:#77d1e3;--query-text:#e1f4f8;--query-muted:#b2cdd5;--query-panel:#142730;--query-input:#10212b}}
+:root[data-theme="dark"]{--query-bg:#182e38;--query-border:#416775;--query-accent:#77d1e3;--query-text:#e1f4f8;--query-muted:#b2cdd5;--query-panel:#142730;--query-input:#10212b}
+.time-action button{background:var(--query-bg);border-color:var(--query-border);border-left-color:var(--query-accent);color:var(--query-text)}.time-action span{color:var(--query-muted)}#timeTools{background:var(--query-panel);border-color:var(--query-border);color:var(--query-text)}#timeTools .small{color:var(--query-muted)}#timeTools input,#timeTools select{background:var(--query-input);color:var(--query-text);border:1px solid var(--query-border);border-radius:10px;padding:10px;color-scheme:light dark}#timeTools .btn{background:var(--query-accent);color:var(--query-input);border-color:var(--query-accent)}#timeTools .btn.ghost{background:transparent;color:var(--query-text);border:1px solid var(--query-border)}.help-area{border-color:var(--line)}.help-area a,.update-actions #updateStatus{color:var(--muted)}
+.search::before{content:'';position:absolute;left:19px;top:18px;width:14px;height:14px;border:2px solid var(--query-accent);border-radius:50%;pointer-events:none;z-index:1}.search::after{content:'';position:absolute;left:33px;top:33px;width:9px;height:2px;transform:rotate(45deg);transform-origin:left;background:var(--query-accent);pointer-events:none;z-index:1}.search input{border:2px solid var(--query-border);padding-left:50px;color:var(--ink);background:var(--surface)}.search input:focus{border-color:var(--query-accent);outline:2px solid var(--query-border);outline-offset:2px}
+@media(max-width:820px){.app[data-mode="detail"]>.time-action{display:none}}.app.search-results:not([data-mode="detail"])>.time-action{display:none}
 </style></head>
 <body><div aria-hidden="true" class="school-watermark"><img alt="" src="image-06.png"/></div>
 <div class="app" data-mode="search" id="app">
@@ -33,13 +40,13 @@
 <aside aria-label="선생님 목록" class="listcol"><div id="list"></div></aside>
 <main class="detailcol" id="detail"></main>
 </div>
-<footer class="app-version"><div class="help-area"><a class="report-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdG_mF5qyMwz_PaR6eZV8yyYXKdkoH-XhpG5xZaa5xLcB55qA/viewform?usp=publish-editor" rel="noopener noreferrer" target="_blank">위치·시간표 오류 제보 ↗</a></div><div>어디쌤 · 화면 버전 UI-08</div></footer></div>
+<footer class="app-version"><div class="help-area"><a class="report-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdG_mF5qyMwz_PaR6eZV8yyYXKdkoH-XhpG5xZaa5xLcB55qA/viewform?usp=publish-editor" rel="noopener noreferrer" target="_blank">위치·시간표 오류 제보 ↗</a></div><div>어디쌤 · 화면 버전 UI-09</div></footer></div>
 
 
 <script>
 // 최신 버전 확인 시 페이지뿐 아니라 모든 기능 파일도 새 주소로 요청합니다.
 (function(){
- const release='20260930-ui08';
+ const release='20260930-ui09';
  const refresh=new URLSearchParams(location.search).get('_refresh');
  const version=release+(refresh?'-'+refresh:'');
  const files=['teachers.js','floorplans.js','config.js','prepare.js','location.js','time.js','render.js','rooms.js','events.js'];
