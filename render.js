@@ -1,3 +1,10 @@
+function highlightTeacherName(name,q){
+ if(!q)return esc(name);
+ const direct=name.indexOf(q);if(direct>=0)return esc(name.slice(0,direct))+'<mark>'+esc(name.slice(direct,direct+q.length))+'</mark>'+esc(name.slice(direct+q.length));
+ const initials=nameInitials(name),at=initials.indexOf(q);
+ if(at>=0)return esc(name.slice(0,at))+'<mark>'+esc(name.slice(at,at+q.length))+'</mark>'+esc(name.slice(at+q.length));
+ return nameDirect(name,q)?'<mark>'+esc(name)+'</mark>':esc(name);
+}
 // 이름의 초성·혼합 입력 및 제한적인 오타 검색
 function nameInitials(s){return Array.from(s).map(c=>{const n=c.charCodeAt(0)-44032;return n>=0&&n<11172?'ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ'[Math.floor(n/588)]:c;}).join('');}
 function nameParts(s){return Array.from(s).map(c=>{const n=c.charCodeAt(0)-44032;return n>=0&&n<11172?String.fromCharCode(0x1100+Math.floor(n/588),0x1161+Math.floor(n%588/28))+(n%28?String.fromCharCode(0x11a7+n%28):''):c;}).join('');}
@@ -44,8 +51,8 @@ function renderList(){
   const rows=groups.get(f);
   return `<section class="floor-group"><h3 class="floor-heading">${f?f+"층":"기본 위치 미등록"}<small>${rows.length}명</small></h3>`+rows.map(t=>{
    const st=statusAt(t,n.day,n.min),off=notWorking(t,n.day);
-   const meta=[t.main,t.homeroom?t.homeroom+" 담임":""].filter(Boolean).join(" · ");
-   return `<button class="row${off?" off-duty":""}" data-id="${t.no}" aria-pressed="${selected===t.no}"><span class="badge ${fcls(f)}" title="기본 장소 층">${f?f+"F":"미등록"}</span><span class="rt"><b>${esc(t.name)} 선생님</b><small title="${esc(meta)}">${esc(meta)}</small><span class="${off?"off-duty-label":""}">${esc(st.loc.label)}${st.kind==="after"?" · 일과 종료":""}</span></span></button>`;
+   const meta=[t.searchSubjects||t.main,t.homeroom?t.homeroom+" 담임":""].filter(Boolean).join(" · ");
+   return `<button class="row${off?" off-duty":""}" data-id="${t.no}" aria-pressed="${selected===t.no}"><span class="badge ${fcls(f)}" title="기본 장소 층">${f?f+"F":"미등록"}</span><span class="rt"><b>${highlightTeacherName(t.name,q)} 선생님</b><small title="${esc(meta)}">${esc(meta)}</small><span class="${off?"off-duty-label":""}">${esc(st.loc.label)}${st.kind==="after"?" · 일과 종료":""}</span></span></button>`;
   }).join("")+`</section>`;
  }).join("") : `<div class="empty">${!q && floorFilter ? "선택한 층에서 검색 결과가 없어요." : "찾는 선생님이 없어요. 이름이나 과목을 다시 확인해 보세요."}${!q && floorFilter ? `<button type="button" class="btn" id="searchAllFloors">전체 층에서 찾기</button>` : ""}</div>`;
  $("searchAllFloors") && ($("searchAllFloors").onclick=()=>{floorFilter=0;syncFloorFilter();renderList();});
@@ -94,7 +101,7 @@ function renderDetail(){
     <div class="detail-actions"><button class="back" id="back">← 선생님 목록</button><button class="btn ghost" id="detailSearch">다른 선생님 검색</button></div>
     <section class="answer">
       <span class="badge big ${fcls(f)}">${f ? f : "?"}</span>
-      <div><p class="who">${esc(t.name)} 선생님${t.homeroom ? " · "+t.homeroom+" 담임" : ""}${t.role ? " · "+esc(t.role) : ""}</p>
+      <div><p class="who">${highlightTeacherName(t.name,q)} 선생님${t.homeroom ? " · "+t.homeroom+" 담임" : ""}${t.role ? " · "+esc(t.role) : ""}</p>
       <span class="tag" style="${!["class","break"].includes(st.kind) && !notWorking(t,n.day) ? "display:none" : ""}">${notWorking(t,n.day) ? "근무 요일 안내" : st.kind==="class" ? "시간표상 수업 장소" : st.kind==="break" ? "다음 교시 장소 · 현재 위치 아님" : ""}</span><h2>${esc(st.title)}</h2><p>${esc(st.sub)}</p>
       ${st.res && st.res.guess ? `<span class="tag">교과 특성상 특별실 수업으로 추정한 위치예요</span>` : ""}
       ${(st.kind!=="class") && !d ? `<span class="tag">아직 자리가 등록되지 않았어요</span>` : ""}</div>
