@@ -11,12 +11,12 @@ function restoreListView(){
  scrollTo({top:savedPageScroll,behavior:"auto"});
 }
 window.addEventListener("popstate",()=>{
- if(history.state?.whereTeacherDetail && selected!==null){$("app").dataset.mode="detail";render();}
+ if(history.state?.whereTeacherDetail && (selected!==null || selectedRoom!==null)){$("app").dataset.mode="detail";render();}
  else restoreListView();
 });
 function goHome(){
  if(history.state?.whereTeacherDetail)history.replaceState(null,"",location.href);
- floorFilter=0;syncFloorFilter(); selected=null; query=""; sim=null; viewDay=null; placing=false; userFloor=false; viewFloor=4;
+ floorFilter=0;syncFloorFilter(); selectedRoom=null; selected=null; query=""; sim=null; viewDay=null; placing=false; userFloor=false; viewFloor=4;
  zoom=1;
  $("q").value="";
  $("app").dataset.mode="list";
