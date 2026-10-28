@@ -31,7 +31,7 @@
 <aside aria-label="선생님 목록" class="listcol"><div id="list"></div></aside>
 <main class="detailcol" id="detail"></main>
 </div>
-<footer class="app-version">어디쌤 · 화면 버전 UI-06 · 교실 검색
+<footer class="app-version">어디쌤 · 화면 버전 UI-07 · 도면 터치·주간 교실 시간표
 <div style="display:flex;justify-content:center;padding:12px 0 20px">
 <button type="button" class="btn ghost" id="latestVersionButton">최신 버전 확인</button>
 </div></footer></div>
@@ -40,7 +40,7 @@
 <script>
 // 최신 버전 확인 시 페이지뿐 아니라 모든 기능 파일도 새 주소로 요청합니다.
 (function(){
- const release='20260930-map6';
+ const release='20260930-ui07';
  const refresh=new URLSearchParams(location.search).get('_refresh');
  const version=release+(refresh?'-'+refresh:'');
  const files=['teachers.js','floorplans.js','config.js','prepare.js','location.js','time.js','render.js','rooms.js','events.js'];
