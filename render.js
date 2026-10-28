@@ -1,3 +1,9 @@
+// 이름의 초성·혼합 입력 및 제한적인 오타 검색
+function nameInitials(s){return Array.from(s).map(c=>{const n=c.charCodeAt(0)-44032;return n>=0&&n<11172?'ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ'[Math.floor(n/588)]:c;}).join('');}
+function nameParts(s){return Array.from(s).map(c=>{const n=c.charCodeAt(0)-44032;return n>=0&&n<11172?String.fromCharCode(0x1100+Math.floor(n/588),0x1161+Math.floor(n%588/28))+(n%28?String.fromCharCode(0x11a7+n%28):''):c;}).join('');}
+function nameDistance(a,b){const d=Array.from({length:a.length+1},()=>Array(b.length+1).fill(0));for(let i=0;i<=a.length;i++)d[i][0]=i;for(let j=0;j<=b.length;j++)d[0][j]=j;for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++){d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])d[i][j]=Math.min(d[i][j],d[i-2][j-2]+1);}return d[a.length][b.length];}
+function nameDirect(name,q){if(name.includes(q))return true;const initials=nameInitials(name);for(let i=0;i<=name.length-q.length;i++){if(Array.from(q).every((c,j)=>c===name[i+j]||(/[ㄱ-ㅎ]/.test(c)&&c===initials[i+j])))return true;}return false;}
+function nameTypoScore(name,q){if(!/^[가-힣]{2,4}$/.test(q))return Infinity;const a=nameParts(name),b=nameParts(q),dist=nameDistance(a,b);return dist<=2&&dist/Math.max(a.length,b.length)<=0.34?dist:Infinity;}
 let selected = null, query = "", zoom = 1, viewFloor = 4, userFloor = false, placing = false, viewDay = null;
 const fcls = f => f ? `f${f}` : "";
 
@@ -27,12 +33,14 @@ function renderChip() {
 let savedListScroll=0,savedPageScroll=0;
 let floorFilter=0;
 function renderList(){
- const n=nowT(),q=query.trim().replace(/\s/g,"");
+ const n=nowT(),q=query.trim().replace(/\s/g,"").replace(/(?:선생님|선생|쌤)$/,"");
  $("app").classList.toggle("search-results",!!q);
- const items=TEACHERS.filter(t=>(!!q||!floorFilter||deskLoc(t).floor===floorFilter)&&(!q||t.name.includes(q)||t.searchSubjects.replace(/\s/g,"").includes(q)||(t.homeroom&&t.homeroom.includes(q))));
+ const direct=TEACHERS.filter(t=>(!!q||!floorFilter||deskLoc(t).floor===floorFilter)&&(!q||nameDirect(t.name,q)||t.searchSubjects.replace(/\s/g,"").includes(q)||(t.homeroom&&t.homeroom.includes(q))));
+ const similar=!!q&&!direct.length;
+ const items=similar?TEACHERS.filter(t=>Number.isFinite(nameTypoScore(t.name,q))).sort((a,b)=>nameTypoScore(a.name,q)-nameTypoScore(b.name,q)):direct;
  const groups=new Map();
  for(const t of items){const f=deskLoc(t).floor||0;if(!groups.has(f))groups.set(f,[]);groups.get(f).push(t);}
- $("list").innerHTML=items.length ? (q ? `<p class="search-count" role="status">검색 결과 ${items.length}명</p>` : `<p class="floor-guide">기본 교무실·학년실의 층별 목록입니다. 각 선생님 아래에는 조회 시간의 장소를 표시합니다.</p>`)+[...groups.keys()].sort((a,b)=>(a||99)-(b||99)).map(f=>{
+ $("list").innerHTML=items.length ? (q ? `<p class="search-count" role="status">${similar?"비슷한 이름 검색 결과":"검색 결과"} ${items.length}명</p>` : `<p class="floor-guide">기본 교무실·학년실의 층별 목록입니다. 각 선생님 아래에는 조회 시간의 장소를 표시합니다.</p>`)+[...groups.keys()].sort((a,b)=>(a||99)-(b||99)).map(f=>{
   const rows=groups.get(f);
   return `<section class="floor-group"><h3 class="floor-heading">${f?f+"층":"기본 위치 미등록"}<small>${rows.length}명</small></h3>`+rows.map(t=>{
    const st=statusAt(t,n.day,n.min),off=notWorking(t,n.day);
