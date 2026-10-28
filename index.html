@@ -7,7 +7,7 @@
 <title>어디쌤 · 비슬고 선생님 위치 안내</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Jua&amp;family=Black+Han+Sans&amp;family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
-<link href="styles.css?v=5" rel="stylesheet"/>
+<link href="styles.css?v=6" rel="stylesheet"/>
 </head>
 <body><div aria-hidden="true" class="school-watermark"><img alt="" src="image-06.png"/></div>
 <div class="app" data-mode="search" id="app">
@@ -16,7 +16,7 @@
 <div class="clock-area"><div aria-live="polite" class="chip" id="chip">--:--</div><button class="btn ghost" hidden="" id="liveReturn" type="button">현재로가기</button></div>
 </header>
 <details class="usage-info"><summary>ⓘ 시간표를 기준으로 선생님의 위치를 안내해요.</summary><p class="small">시간표 기반 예상 위치입니다. 실시간 재실 확인이 아니며 휴일·시험·보강·출장은 반영되지 않습니다. 시간은 한국 표준시 기준입니다. 지도에는 개인 책상 위치가 아닌, 선생님의 기본 교무실·학년실 위치가 표시됩니다.</p></details><div class="search">
-<input aria-label="선생님 검색" autocomplete="off" id="q" placeholder="선생님 이름, 과목, 담임 반(예: 2-3)으로 찾기" type="search"/>
+<input aria-label="선생님 또는 교실 검색" autocomplete="off" id="q" placeholder="이름·과목·교실 검색 (예: 2-3, 화학실)" type="search"/>
 </div><div class="report-linkbar"><button aria-controls="timeTools" aria-expanded="false" class="report-link" id="timeToggle" type="button">요일·시간별 위치 조회</button><a class="report-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdG_mF5qyMwz_PaR6eZV8yyYXKdkoH-XhpG5xZaa5xLcB55qA/viewform?usp=publish-editor" rel="noopener noreferrer" target="_blank">위치·시간표 오류 제보 ↗</a></div><details class="tools" id="timeTools">
 <summary>요일·시간별 위치 조회</summary><p class="small">원하는 요일과 시간을 선택하면, 그 시간의 시간표상 장소를 확인할 수 있어요.</p>
 <div class="trow">
@@ -31,13 +31,13 @@
 <aside aria-label="선생님 목록" class="listcol"><div id="list"></div></aside>
 <main class="detailcol" id="detail"></main>
 </div>
-<footer class="app-version">어디쌤 · 화면 버전 UI-05
+<footer class="app-version">어디쌤 · 화면 버전 UI-06 · 교실 검색
 <div style="display:flex;justify-content:center;padding:12px 0 20px">
 <button type="button" class="btn ghost" id="latestVersionButton">최신 버전 확인</button>
 </div></footer></div>
 
 
-<script src="teachers.js?v=5"></script><script src="floorplans.js?v=5"></script><script src="config.js?v=5"></script><script src="prepare.js?v=5"></script><script src="location.js?v=5"></script><script src="time.js?v=5"></script><script src="render.js?v=5"></script><script src="events.js?v=5"></script><script>
+<script src="teachers.js?v=6"></script><script src="floorplans.js?v=6"></script><script src="config.js?v=6"></script><script src="prepare.js?v=6"></script><script src="location.js?v=6"></script><script src="time.js?v=6"></script><script src="render.js?v=6"></script><script src="rooms.js?v=6"></script><script src="events.js?v=6"></script><script>
 (function () {
   const button = document.getElementById("latestVersionButton");
   button.addEventListener("click", function () {
