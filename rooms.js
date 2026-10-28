@@ -21,7 +21,7 @@ function roomCurrent(room){
  const rows=roomLessons(room,n.day,p.n);
  return {label:rows.length?roomLessonText(rows):'등록된 시간표에서 이 교실의 수업을 확인하지 못했습니다',rows,period:p};
 }
-// 등록된 평일 시간표에서 수업 장소로 확인되는 공간만 검색에 노출합니다.
+// 현재 교시와 무관하게 월~금 전체 시간표로 수업 공간을 판정합니다.
 let searchableTeachingRooms=null;
 function teachingRoomNames(){
  if(searchableTeachingRooms)return searchableTeachingRooms;
