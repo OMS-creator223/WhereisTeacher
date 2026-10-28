@@ -9,19 +9,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Jua&amp;family=Black+Han+Sans&amp;family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
 <link href="styles.css?v=20260930-search4" rel="stylesheet"/>
 <style>
-.update-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap;margin:4px 0 12px}.update-actions button{font-size:12px;min-height:38px}.update-actions #updateStatus{font-size:12px;color:#35654c}.time-action{margin:12px 0}.time-action button{width:100%;text-align:left;padding:15px 18px;border:1px solid #b9d5dc;border-left:4px solid #16758a;border-radius:14px;background:#edf7fa;color:#174853;font:700 14px 'Noto Sans KR',sans-
-serif;cursor:pointer}.time-action span{display:block;font-size:11px;font-weight:400;margin:5px 0 0 22px;color:#54737d}#timeTools{background:#f5fafb;border:1px solid #c9dce2;border-radius:14px;padding:16px;margin-bottom:16px}.help-area{border-top:1px solid #dce3e6;padding:18px 0 14px;margin-top:24px}.help-area a{font-size:12px;color:#687980;text-decoration:underline;text-underline-offset:4px}.app-version{padding-bottom:24px}
+.update-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap;margin:4px 0 12px}.update-actions button{font-size:12px;min-height:38px}.update-actions #updateStatus{font-size:12px;color:#35654c}.time-action{margin:12px 0}.time-action button{width:100%;text-align:left;padding:15px 18px;border:1px solid #b9d5dc;border-left:4px solid #16758a;border-radius:14px;background:#edf7fa;color:#174853;font:700 14px 'Noto Sans KR',sans-serif;cursor:pointer}.time-action span{display:block;font-size:11px;font-weight:400;margin:5px 0 0 22px;color:#54737d}#timeTools{background:#f5fafb;border:1px solid #c9dce2;border-radius:14px;padding:16px;margin-bottom:16px}.help-area{border-top:1px solid #dce3e6;padding:18px 0 14px;margin-top:24px}.help-area a{font-size:12px;color:#687980;text-decoration:underline;text-underline-offset:4px}.app-version{padding-bottom:24px}
 </style></head>
 <body><div aria-hidden="true" class="school-watermark"><img alt="" src="image-06.png"/></div>
-<div class="app" 
-data-mode="search" id="app">
+<div class="app" data-mode="search" id="app">
 <header class="top">
 <h1 class="logo"><button aria-label="어디쌤 처음 화면으로 돌아가기" id="homeLogo" style="all:unset;display:flex;align-items:center;gap:8px;cursor:pointer;border-radius:8px" type="button"><img alt="" aria-hidden="true" class="school-app-logo" height="44" src="image-07.png" width="44"/>어디쌤</button></h1>
-<div class="clock-area"><div aria-live="polite" class="chip" id="chip">--:--</div><button class="btn ghost" hidden="" id="liveReturn" type="button">현재로가기</
-button></div>
+<div class="clock-area"><div aria-live="polite" class="chip" id="chip">--:--</div><button class="btn ghost" hidden="" id="liveReturn" type="button">현재로가기</button></div>
 </header><div class="update-actions"><span id="updateStatus" role="status" aria-live="polite"></span><button type="button" class="btn ghost" id="latestVersionButton">↻ 최신 버전 확인</button></div>
-<details class="usage-info"><summary>ⓘ 시간표를 기준으로 선생님의 위치를 안내해요.</summary><p class="small">시간표 기반 예상 위치입니다. 실시간 재실 확인이 아니며 휴일·시험·보강·출장은 반영되지 않습니다. 시간은 한국 표준시 기준입니다. 지도에는 개인 책상 위치가 아닌, 선생님의 기본 교무실·학년실 위치가 표시됩니다.</p></details><div 
-class="search">
+<details class="usage-info"><summary>ⓘ 시간표를 기준으로 선생님의 위치를 안내해요.</summary><p class="small">시간표 기반 예상 위치입니다. 실시간 재실 확인이 아니며 휴일·시험·보강·출장은 반영되지 않습니다. 시간은 한국 표준시 기준입니다. 지도에는 개인 책상 위치가 아닌, 선생님의 기본 교무실·학년실 위치가 표시됩니다.</p></details><div class="search">
 <input aria-label="선생님 또는 교실 검색" autocomplete="off" id="q" placeholder="이름·과목·교실 검색 (예: 2-3, 화학실)" type="search"/>
 </div><div class="time-action"><button aria-controls="timeTools" aria-expanded="false" id="timeToggle" type="button">◷ 요일·시간 선택해서 조회 <span>시간표 기준 위치 확인</span></button></div><details class="tools" id="timeTools">
 <summary>요일·시간별 위치 조회</summary><p class="small">원하는 요일과 시간을 선택하면, 그 시간의 시간표상 장소를 확인할 수 있어요.</p>
@@ -32,14 +28,12 @@ class="search">
 <button class="btn ghost" id="simLive">현재로가기</button>
 </div>
 <p class="small">조회 전용입니다. 자리와 시간표는 이 파일에 포함된 데이터를 기준으로 안내합니다. 교시 시간은 학교 확인이 필요합니다.</p>
-</details><nav aria-label="기본 위치 층 선택" id="floorFilter"><button aria-pressed="true" data-floor="0" type="button">전체</button><button aria-pressed="false" data-floor="1" type="button">1층</button><button aria-pressed="false" data-floor="2" type="button">2층</button><button aria-pressed="false" data-floor="3" type="button">3층</button><button aria-pressed="false" data-floor="4" type="button">4층</button><button aria-pressed="false" data-floor="5" 
-type="button">5층</button></nav>
+</details><nav aria-label="기본 위치 층 선택" id="floorFilter"><button aria-pressed="true" data-floor="0" type="button">전체</button><button aria-pressed="false" data-floor="1" type="button">1층</button><button aria-pressed="false" data-floor="2" type="button">2층</button><button aria-pressed="false" data-floor="3" type="button">3층</button><button aria-pressed="false" data-floor="4" type="button">4층</button><button aria-pressed="false" data-floor="5" type="button">5층</button></nav>
 <div class="layout">
 <aside aria-label="선생님 목록" class="listcol"><div id="list"></div></aside>
 <main class="detailcol" id="detail"></main>
 </div>
-<footer class="app-version"><div class="help-area"><a class="report-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdG_mF5qyMwz_PaR6eZV8yyYXKdkoH-XhpG5xZaa5xLcB55qA/viewform?usp=publish-editor" rel="noopener noreferrer" target="_blank">위치·시간표 오류 제보 ↗</a></div><div>어디쌤 · 화면 
-버전 UI-08</div></footer></div>
+<footer class="app-version"><div class="help-area"><a class="report-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdG_mF5qyMwz_PaR6eZV8yyYXKdkoH-XhpG5xZaa5xLcB55qA/viewform?usp=publish-editor" rel="noopener noreferrer" target="_blank">위치·시간표 오류 제보 ↗</a></div><div>어디쌤 · 화면 버전 UI-08</div></footer></div>
 
 
 <script>
@@ -50,8 +44,7 @@ type="button">5층</button></nav>
  const version=release+(refresh?'-'+refresh:'');
  const files=['teachers.js','floorplans.js','config.js','prepare.js','location.js','time.js','render.js','rooms.js','events.js'];
  for(const file of files){
-  document.write('<script src="'+file+'?
-v='+encodeURIComponent(version)+'"><'+'/script>');
+  document.write('<script src="'+file+'?v='+encodeURIComponent(version)+'"><'+'/script>');
  }
  if(refresh){
   document.querySelectorAll('link[rel="stylesheet"]').forEach(link=>{
@@ -62,8 +55,7 @@ v='+encodeURIComponent(version)+'"><'+'/script>');
 })();
 </script><script>
 (function () {
- const files=['index.html','styles.css','teachers.js','floorplans.js','config.js','prepare.js','location.js','time.js','rend
-er.js','rooms.js','events.js'];
+ const files=['index.html','styles.css','teachers.js','floorplans.js','config.js','prepare.js','location.js','time.js','render.js','rooms.js','events.js'];
  const button=document.getElementById('latestVersionButton'),status=document.getElementById('updateStatus');
  // 배포 파일 내용의 해시를 비교합니다.
  async function fingerprint(){
@@ -72,8 +64,7 @@ er.js','rooms.js','events.js'];
    const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw Error(file);
    return file+'\n'+await response.text();
   }));
-  const hash=await 
-crypto.subtle.digest('SHA-256',new TextEncoder().encode(contents.join('\n')));
+  const hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(contents.join('\n')));
   return Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join('');
  }
  let baseline=null;
@@ -82,8 +73,7 @@ crypto.subtle.digest('SHA-256',new TextEncoder().encode(contents.join('\n')));
    baseline=await fingerprint();
    const pending=JSON.parse(sessionStorage.getItem('whereTeacherPendingUpdate')||'null');
    sessionStorage.removeItem('whereTeacherPendingUpdate');
-   
-if(pending&&pending.before!==baseline&&pending.expected===baseline){status.textContent='업데이트가 완료되었습니다.';}
+   if(pending&&pending.before!==baseline&&pending.expected===baseline){status.textContent='업데이트가 완료되었습니다.';}
   }catch(e){/* 확인 실패 시 성공 문구를 표시하지 않습니다. */}
  })();
  button.addEventListener('click',async()=>{
@@ -92,8 +82,7 @@ if(pending&&pending.before!==baseline&&pending.expected===baseline){status.textC
    await ready;if(!baseline)throw Error('baseline');
    const latest=await fingerprint();
    if(latest===baseline){status.textContent='변경된 파일이 없습니다.';return;}
-   
-sessionStorage.setItem('whereTeacherPendingUpdate',JSON.stringify({before:baseline,expected:latest}));
+   sessionStorage.setItem('whereTeacherPendingUpdate',JSON.stringify({before:baseline,expected:latest}));
    const url=new URL(location.href);url.searchParams.set('_refresh',Date.now());location.replace(url.href);
   }catch(e){status.textContent='업데이트를 확인하지 못했습니다. 잠시 후 다시 시도해 주세요.';}
   finally{button.disabled=false;}
