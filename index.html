@@ -50,6 +50,17 @@ mark{background:var(--ui-tint);color:var(--ui-text);border-bottom:2px solid var(
 .mapwrap{border:2px solid var(--query-border);border-radius:14px;background:var(--surface)}
 .help-area{border-top:1px solid var(--query-border);padding-top:16px;margin-top:20px}
 .report-link{display:inline-block;border:1px solid var(--query-border);padding:9px 14px;border-radius:10px;background:var(--surface);color:var(--ink)}
+</style><style>
+/* UI15: 한 줄 설명과 검색 아이콘 정렬 */
+.usage-info{padding:11px 13px}
+.usage-info summary{display:flex;flex-wrap:nowrap;gap:8px;justify-content:space-between;align-items:center;list-style:none}
+.usage-info summary::-webkit-details-marker{display:none}
+.usage-short{font-size:.84rem;color:var(--muted);min-width:0}
+.usage-info .usage-more{border:0;background:transparent;color:var(--muted);padding:0;font-size:.75rem;font-weight:500;box-shadow:none;flex-shrink:0}
+.search{padding:0;border:0;background:transparent;border-radius:18px}
+.search::before{left:19px!important;top:50%;transform:translateY(-65%);width:13px;height:13px;box-sizing:content-box}
+.search::after{left:32px;top:calc(50% + 5px);width:8px;height:2px;transform:rotate(45deg)}
+.search input{padding-left:48px;border-radius:18px}
 </style></head>
 <body><div aria-hidden="true" class="school-watermark"><img alt="" src="image-06.png"/></div>
 <div class="app" data-mode="search" id="app">
@@ -57,7 +68,7 @@ mark{background:var(--ui-tint);color:var(--ui-text);border-bottom:2px solid var(
 <h1 class="logo"><button aria-label="어디쌤 처음 화면으로 돌아가기" id="homeLogo" style="all:unset;display:flex;align-items:center;gap:8px;cursor:pointer;border-radius:8px" type="button"><img alt="" aria-hidden="true" class="school-app-logo" height="44" src="image-07.png" width="44"/>어디쌤</button></h1>
 <div class="clock-area"><div aria-live="polite" class="chip" id="chip">--:--</div><button class="btn ghost" hidden="" id="liveReturn" type="button">현재로가기</button></div>
 </header><div class="update-actions"><span id="updateStatus" role="status" aria-live="polite"></span><button type="button" class="btn ghost" id="latestVersionButton">↻ 최신 버전 확인</button></div>
-<details class="usage-info"><summary>ⓘ 시간표를 기준으로 선생님의 위치를 안내해요. <span class="usage-more">자세히 보기 ▾</span></summary><p class="small">시간표 기반 예상 위치입니다. 실시간 재실 확인이 아니며 휴일·시험·보강·출장은 반영되지 않습니다. 시간은 한국 표준시 기준입니다. 지도에는 개인 책상 위치가 아닌, 선생님의 기본 교무실·학년실 위치가 표시됩니다.</p></details><div class="search">
+<details class="usage-info"><summary><span class="usage-short">ⓘ 시간표 기반 위치 안내</span><span class="usage-more">자세히 보기 ▾</span></summary><p class="small">시간표 기반 예상 위치입니다. 실시간 재실 확인이 아니며 휴일·시험·보강·출장은 반영되지 않습니다. 시간은 한국 표준시 기준입니다. 지도에는 개인 책상 위치가 아닌, 선생님의 기본 교무실·학년실 위치가 표시됩니다.</p></details><div class="search">
 <input aria-label="선생님 또는 교실 검색" autocomplete="off" id="q" placeholder="이름·과목·교실 검색 (예: 2-3, 화학실)" type="search"/>
 </div><div class="time-action"><button aria-controls="timeTools" aria-expanded="false" id="timeToggle" type="button">◷ 요일·시간 선택해서 조회 <span>시간표 기준 위치 확인</span></button></div><details class="tools" id="timeTools">
 <summary>요일·시간별 위치 조회</summary><p class="small">원하는 요일과 시간을 선택하면, 그 시간의 시간표상 장소를 확인할 수 있어요.</p>
@@ -73,13 +84,13 @@ mark{background:var(--ui-tint);color:var(--ui-text);border-bottom:2px solid var(
 <aside aria-label="선생님 목록" class="listcol"><div id="list"></div></aside>
 <main class="detailcol" id="detail"></main>
 </div>
-<footer class="app-version"><div class="help-area"><a class="report-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdG_mF5qyMwz_PaR6eZV8yyYXKdkoH-XhpG5xZaa5xLcB55qA/viewform?usp=publish-editor" rel="noopener noreferrer" target="_blank">위치·시간표 오류 제보 ↗</a></div><div>어디쌤 · 화면 버전 UI-14</div></footer></div>
+<footer class="app-version"><div class="help-area"><a class="report-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdG_mF5qyMwz_PaR6eZV8yyYXKdkoH-XhpG5xZaa5xLcB55qA/viewform?usp=publish-editor" rel="noopener noreferrer" target="_blank">위치·시간표 오류 제보 ↗</a></div><div>어디쌤 · 화면 버전 UI-15</div></footer></div>
 
 
 <script>
 // 최신 버전 확인 시 페이지뿐 아니라 모든 기능 파일도 새 주소로 요청합니다.
 (function(){
- const release='20260930-ui14';
+ const release='20260930-ui15';
  const refresh=new URLSearchParams(location.search).get('_refresh');
  const version=release+(refresh?'-'+refresh:'');
  const files=['teachers.js','floorplans.js','config.js','prepare.js','location.js','time.js','render.js','rooms.js','events.js'];
