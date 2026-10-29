@@ -51,7 +51,7 @@ function renderList(){
   const rows=groups.get(f);
   return `<section class="floor-group"><h3 class="floor-heading">${f?f+"층":"기본 위치 미등록"}<small>${rows.length}명</small></h3>`+rows.map(t=>{
    const st=statusAt(t,n.day,n.min),off=notWorking(t,n.day);
-   const meta=[t.searchSubjects||t.main,t.homeroom?t.homeroom+" 담임":""].filter(Boolean).join(" · ");
+   const meta=[t.main,t.homeroom?t.homeroom+" 담임":""].filter(Boolean).join(" · ");
    return `<button class="row${off?" off-duty":""}" data-id="${t.no}" aria-pressed="${selected===t.no}"><span class="badge ${fcls(f)}" title="기본 장소 층">${f?f+"F":"미등록"}</span><span class="rt"><b>${highlightTeacherName(t.name,q)} 선생님</b><small title="${esc(meta)}">${esc(meta)}</small><span class="${off?"off-duty-label":""}">${esc(st.loc.label)}${st.kind==="after"?" · 일과 종료":""}</span></span></button>`;
   }).join("")+`</section>`;
  }).join("") : `<div class="empty">${!q && floorFilter ? "선택한 층에서 검색 결과가 없어요." : "찾는 선생님이 없어요. 이름이나 과목을 다시 확인해 보세요."}${!q && floorFilter ? `<button type="button" class="btn" id="searchAllFloors">전체 층에서 찾기</button>` : ""}</div>`;
