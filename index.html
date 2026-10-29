@@ -54,13 +54,13 @@ mark{background:var(--ui-tint);color:var(--ui-text);border-bottom:2px solid var(
 <aside aria-label="선생님 목록" class="listcol"><div id="list"></div></aside>
 <main class="detailcol" id="detail"></main>
 </div>
-<footer class="app-version"><div class="help-area"><a class="report-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdG_mF5qyMwz_PaR6eZV8yyYXKdkoH-XhpG5xZaa5xLcB55qA/viewform?usp=publish-editor" rel="noopener noreferrer" target="_blank">위치·시간표 오류 제보 ↗</a></div><div>어디쌤 · 화면 버전 UI-11</div></footer></div>
+<footer class="app-version"><div class="help-area"><a class="report-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdG_mF5qyMwz_PaR6eZV8yyYXKdkoH-XhpG5xZaa5xLcB55qA/viewform?usp=publish-editor" rel="noopener noreferrer" target="_blank">위치·시간표 오류 제보 ↗</a></div><div>어디쌤 · 화면 버전 UI-12</div></footer></div>
 
 
 <script>
 // 최신 버전 확인 시 페이지뿐 아니라 모든 기능 파일도 새 주소로 요청합니다.
 (function(){
- const release='20260930-ui11';
+ const release='20260930-ui12';
  const refresh=new URLSearchParams(location.search).get('_refresh');
  const version=release+(refresh?'-'+refresh:'');
  const files=['teachers.js','floorplans.js','config.js','prepare.js','location.js','time.js','render.js','rooms.js','events.js'];
