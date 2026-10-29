@@ -41,7 +41,7 @@ function locOf(res){
 const WORK_DAYS={"윤정혜":[4,5],"강신재":[4,5],"김규나":[4,5],"조현창":[1,2,3],"김지희":[1,2,3],"손영아":[1,2,3]};
 const notWorking=(t,day)=>!!WORK_DAYS[t.name] && !WORK_DAYS[t.name].includes(Number(day));
 const offLocation=()=>({floor:null,room:null,label:"오늘은 근무일이 아닙니다"});
-function statusAt(t, day, min){
+function baseStatusAt(t, day, min){
   if(notWorking(t,day))return {kind:"off",loc:offLocation(),title:"오늘은 근무일이 아닙니다",sub:"근무 요일: "+WORK_DAYS[t.name].map(d=>DAYN[d]).join("·")+" · 기본 자리와 위치 핀을 표시하지 않습니다."};
   if (day<1 || day>5) return {kind:"off", loc:deskLoc(t), title:"오늘은 수업이 없는 날이에요", sub:"주말에는 학교에 안 계실 수 있어요."};
   const list = PERIODS.filter(p => p.n <= DAY_LAST[day]);
@@ -70,3 +70,12 @@ function statusAt(t, day, min){
 /* =========================================================
    시각 (실시간 / 지정)
    ========================================================= */
+
+// 기본 위치는 유지하며 수업 외 가능한 장소를 별도로 안내합니다.
+function statusAt(t,day,min){
+ const result=baseStatusAt(t,day,min);
+ if(t.name==='변강순'&&day>=1&&day<=5&&result.kind!=='class'&&!result.res&&!notWorking(t,day)){
+  result.sub+=' 컴퓨터실2에도 계실 수 있습니다. 실제 위치는 확인이 필요합니다.';
+ }
+ return result;
+}
