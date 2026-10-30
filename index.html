@@ -31,6 +31,43 @@ mark{background:var(--ui-tint);color:var(--ui-text);border-bottom:2px solid var(
 .floors .fbtn.here:not([aria-selected="true"]):not([aria-pressed="true"]){background:var(--surface)!important;color:var(--ink)!important;border:1px dashed var(--query-accent)!important;box-shadow:none}
 .floors .fbtn:focus-visible{outline:3px solid var(--query-accent);outline-offset:4px}.floors .fbtn:active{transform:scale(.96)}
 @media(prefers-reduced-motion:reduce){.floors .fbtn{transition:none;transform:none!important}}
+</style><style>
+.usage-info summary{cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.usage-more{display:inline-block;font-size:.78rem;font-weight:700;border:1px solid currentColor;border-radius:999px;padding:4px 9px;color:var(--ink);background:var(--surface);white-space:nowrap}
+.usage-info summary:focus-visible{outline:3px solid var(--ink);outline-offset:4px;border-radius:8px}
+.usage-info[open] .usage-more{font-weight:800}
+</style><style>
+/* 기능별 표면 구분: 공통 테마 변수로 일반/다크 동시 대응 */
+.search{padding:10px;border:1px solid var(--query-border);border-radius:22px;background:var(--query-panel)}
+.search::before{left:28px!important}
+#timeTools{border:2px solid var(--query-border);background:var(--query-panel);border-radius:16px;padding:14px;margin:12px 0;box-shadow:0 3px 12px rgba(0,0,0,.05)}
+#timeTools summary{font-weight:800;color:var(--query-accent)}
+.usage-info{border:1px solid var(--query-border);border-radius:12px;padding:12px;background:var(--surface);margin-bottom:12px}
+.update-actions{border-bottom:1px solid var(--query-border);padding:10px 0;margin-bottom:12px}
+.row{border:1px solid var(--query-border);background:var(--surface);border-radius:14px;margin-bottom:8px;transition:border-color .15s,box-shadow .15s}
+.row:hover,.row:focus-visible{border-color:var(--query-accent);box-shadow:0 0 0 2px var(--query-border)}
+.row[aria-pressed="true"]{border:2px solid var(--query-accent);background:var(--query-panel)}
+.mapwrap{border:2px solid var(--query-border);border-radius:14px;background:var(--surface)}
+.help-area{border-top:1px solid var(--query-border);padding-top:16px;margin-top:20px}
+.report-link{display:inline-block;border:1px solid var(--query-border);padding:9px 14px;border-radius:10px;background:var(--surface);color:var(--ink)}
+</style><style>
+/* UI15: 한 줄 설명과 검색 아이콘 정렬 */
+.usage-info{padding:11px 13px}
+.usage-info summary{display:flex;flex-wrap:nowrap;gap:8px;justify-content:space-between;align-items:center;list-style:none}
+.usage-info summary::-webkit-details-marker{display:none}
+.usage-short{font-size:.84rem;color:var(--muted);min-width:0}
+.usage-info .usage-more{border:0;background:transparent;color:var(--muted);padding:0;font-size:.75rem;font-weight:500;box-shadow:none;flex-shrink:0}
+.search{padding:0;border:0;background:transparent;border-radius:18px}
+.search::before{left:19px!important;top:50%;transform:translateY(-65%);width:13px;height:13px;box-sizing:content-box}
+.search::after{left:32px;top:calc(50% + 5px);width:8px;height:2px;transform:rotate(45deg)}
+.search input{padding-left:48px;border-radius:18px}
+</style><style>
+/* UI16: 한 개의 마스크 아이콘으로 원과 손잡이 일체화 */
+.search::before{content:"";position:absolute;left:18px!important;top:50%;transform:translateY(-50%);width:22px;height:22px;border:0;border-radius:0;box-sizing:border-box;background:var(--query-accent);pointer-events:none;
+-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='10.5' cy='10.5' r='7' fill='none' stroke='black' stroke-width='2.4'/%3E%3Cpath d='M15.7 15.7L21 21' stroke='black' stroke-width='2.8' stroke-linecap='square'/%3E%3C/svg%3E") center/contain no-repeat;
+mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='10.5' cy='10.5' r='7' fill='none' stroke='black' stroke-width='2.4'/%3E%3Cpath d='M15.7 15.7L21 21' stroke='black' stroke-width='2.8' stroke-linecap='square'/%3E%3C/svg%3E") center/contain no-repeat}
+.search::after{content:none;display:none}
+.search input{padding-left:50px}
 </style></head>
 <body><div aria-hidden="true" class="school-watermark"><img alt="" src="image-06.png"/></div>
 <div class="app" data-mode="search" id="app">
@@ -38,7 +75,7 @@ mark{background:var(--ui-tint);color:var(--ui-text);border-bottom:2px solid var(
 <h1 class="logo"><button aria-label="어디쌤 처음 화면으로 돌아가기" id="homeLogo" style="all:unset;display:flex;align-items:center;gap:8px;cursor:pointer;border-radius:8px" type="button"><img alt="" aria-hidden="true" class="school-app-logo" height="44" src="image-07.png" width="44"/>어디쌤</button></h1>
 <div class="clock-area"><div aria-live="polite" class="chip" id="chip">--:--</div><button class="btn ghost" hidden="" id="liveReturn" type="button">현재로가기</button></div>
 </header><div class="update-actions"><span id="updateStatus" role="status" aria-live="polite"></span><button type="button" class="btn ghost" id="latestVersionButton">↻ 최신 버전 확인</button></div>
-<details class="usage-info"><summary>ⓘ 시간표를 기준으로 선생님의 위치를 안내해요.</summary><p class="small">시간표 기반 예상 위치입니다. 실시간 재실 확인이 아니며 휴일·시험·보강·출장은 반영되지 않습니다. 시간은 한국 표준시 기준입니다. 지도에는 개인 책상 위치가 아닌, 선생님의 기본 교무실·학년실 위치가 표시됩니다.</p></details><div class="search">
+<details class="usage-info"><summary><span class="usage-short">ⓘ 시간표 기반 위치 안내</span><span class="usage-more">자세히 보기 ▾</span></summary><p class="small">시간표 기반 예상 위치입니다. 실시간 재실 확인이 아니며 휴일·시험·보강·출장은 반영되지 않습니다. 시간은 한국 표준시 기준입니다. 지도에는 개인 책상 위치가 아닌, 선생님의 기본 교무실·학년실 위치가 표시됩니다.</p></details><div class="search">
 <input aria-label="선생님 또는 교실 검색" autocomplete="off" id="q" placeholder="이름·과목·교실 검색 (예: 2-3, 화학실)" type="search"/>
 </div><div class="time-action"><button aria-controls="timeTools" aria-expanded="false" id="timeToggle" type="button">◷ 요일·시간 선택해서 조회 <span>시간표 기준 위치 확인</span></button></div><details class="tools" id="timeTools">
 <summary>요일·시간별 위치 조회</summary><p class="small">원하는 요일과 시간을 선택하면, 그 시간의 시간표상 장소를 확인할 수 있어요.</p>
@@ -54,27 +91,22 @@ mark{background:var(--ui-tint);color:var(--ui-text);border-bottom:2px solid var(
 <aside aria-label="선생님 목록" class="listcol"><div id="list"></div></aside>
 <main class="detailcol" id="detail"></main>
 </div>
-<footer class="app-version"><div class="help-area"><a class="report-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdG_mF5qyMwz_PaR6eZV8yyYXKdkoH-XhpG5xZaa5xLcB55qA/viewform?usp=publish-editor" rel="noopener noreferrer" target="_blank">위치·시간표 오류 제보 ↗</a></div><div>어디쌤 · 화면 버전 UI-12</div></footer></div>
+<footer class="app-version"><div class="help-area"><a class="report-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdG_mF5qyMwz_PaR6eZV8yyYXKdkoH-XhpG5xZaa5xLcB55qA/viewform?usp=publish-editor" rel="noopener noreferrer" target="_blank">위치·시간표 오류 제보 ↗</a></div><div>어디쌤 · 화면 버전 UI-17</div></footer></div>
 
 
 <script>
-// 최신 버전 확인 시 페이지뿐 아니라 모든 기능 파일도 새 주소로 요청합니다.
-(function(){
- const release='20260930-ui12';
- const refresh=new URLSearchParams(location.search).get('_refresh');
- const version=release+(refresh?'-'+refresh:'');
- const files=['teachers.js','floorplans.js','config.js','prepare.js','location.js','time.js','render.js','rooms.js','events.js'];
- for(const file of files){
-  document.write('<script src="'+file+'?v='+encodeURIComponent(version)+'"><'+'/script>');
- }
- if(refresh){
-  document.querySelectorAll('link[rel="stylesheet"]').forEach(link=>{
-   const url=new URL(link.href,location.href);
-   if(url.origin===location.origin){url.searchParams.set('v',version);link.href=url.href;}
-  });
- }
-})();
-</script><script>
+window.addEventListener('error',function(e){const box=document.getElementById('updateStatus');if(box)box.textContent='실행 오류: '+(e.message||'파일을 불러오지 못했습니다.')+(e.filename?' · '+e.filename.split('/').pop().split('?')[0]+':'+e.lineno:'');});
+</script>
+<script src="teachers.js?v=ui17" onerror="document.getElementById('updateStatus').textContent='teachers.js 로드 실패'"></script>
+<script src="floorplans.js?v=ui17" onerror="document.getElementById('updateStatus').textContent='floorplans.js 로드 실패'"></script>
+<script src="config.js?v=ui17" onerror="document.getElementById('updateStatus').textContent='config.js 로드 실패'"></script>
+<script src="prepare.js?v=ui17" onerror="document.getElementById('updateStatus').textContent='prepare.js 로드 실패'"></script>
+<script src="location.js?v=ui17" onerror="document.getElementById('updateStatus').textContent='location.js 로드 실패'"></script>
+<script src="time.js?v=ui17" onerror="document.getElementById('updateStatus').textContent='time.js 로드 실패'"></script>
+<script src="render.js?v=ui17" onerror="document.getElementById('updateStatus').textContent='render.js 로드 실패'"></script>
+<script src="rooms.js?v=ui17" onerror="document.getElementById('updateStatus').textContent='rooms.js 로드 실패'"></script>
+<script src="events.js?v=ui17" onerror="document.getElementById('updateStatus').textContent='events.js 로드 실패'"></script>
+<script>
 (function () {
  const files=['index.html','styles.css','teachers.js','floorplans.js','config.js','prepare.js','location.js','time.js','render.js','rooms.js','events.js'];
  const button=document.getElementById('latestVersionButton'),status=document.getElementById('updateStatus');
