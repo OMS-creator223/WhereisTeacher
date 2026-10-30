@@ -81,6 +81,7 @@ function renderDetail(){
     return;
   }
   const t = TEACHERS.find(x => x.no === selected), n = nowT();
+  const q=query.trim().replace(/\s/g, "").replace(/(?:선생님|선생|쌤)$/, "");
   const st = statusAt(t, n.day, n.min), f = st.loc.floor;
   if (!userFloor && !placing && f) viewFloor = f;
   const showDay = viewDay ?? ((n.day>=1 && n.day<=5) ? n.day : 1);
